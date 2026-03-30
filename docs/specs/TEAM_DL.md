@@ -13,12 +13,41 @@
 The original project spec assumed HDF5 keys like `W`, `X_s`, `Y`, `A`. **This is wrong.** The actual dataset from the Kaggle source (`kaggle.com/datasets/shreyaravi0/aircraft`) uses `_dev` and `_test` suffixed keys. Here is what `list(f.keys())` actually returns:
 
 ```
+<<<<<<< Updated upstream
 ['A_dev', 'A_test', 'A_var',
  'T_dev', 'T_test', 'T_var',
  'W_dev', 'W_test', 'W_var',
  'X_s_dev', 'X_s_test', 'X_s_var',
  'X_v_dev', 'X_v_test', 'X_v_var',
  'Y_dev', 'Y_test']
+=======
+Sensor window (50 timesteps × 18 features)
+                    │
+                    ▼
+    ┌───────────────────────────────┐
+    │  CNN Block (Conv1d × 2)       │
+    │  Local temporal patterns      │
+    │  (B, 50, 18) → (B, 50, 128)   │
+    └───────────────┬───────────────┘
+                    │
+                    ▼
+    ┌───────────────────────────────┐
+    │  LSTM Block (2-layer)         │
+    │  Degradation trajectory       │
+    │  (B, 50, 128) → (B, 128)      │
+    └───────────────┬───────────────┘
+                    │
+                    ▼
+    ┌───────────────────────────────┐
+    │  Regression Head              │
+    │  Linear(128→64→1)             │
+    │  (B, 128) → (B,)              │
+    └───────────────┬───────────────┘
+                    │
+                    ▼
+            RUL prediction (float)
+            "This machine has ~22 shift-cycles left"
+>>>>>>> Stashed changes
 ```
 
 **The `_dev` suffix = training data. The `_test` suffix = test data.** The dataset is **pre-split** for you. You do NOT manually split by unit IDs — it's already done inside the `.h5` file. The `_var` keys contain variable name strings for reference.

@@ -122,8 +122,6 @@ pip-selfcheck.json
 # Web P
 *.webp
 
-# Portable Network Graphics
-*.png
 
 # Animated Portable Network Graphics
 *.apng
@@ -312,6 +310,5 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-output/
 
 publication_output
