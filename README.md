@@ -3,6 +3,8 @@
 > **End-to-End AI System for Industrial Decision Intelligence**
 > Combining Deep Learning, LLM-based Agents, and Real-Time Operations Analytics
 
+> 🏆 Built for **AI Hackfest** by **Major League Hacking (MLH)**
+
 ---
 
 ## 🚀 Overview
