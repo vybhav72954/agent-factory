@@ -1,0 +1,9 @@
+numpy
+scikit-learn==1.6.1
+joblib==1.5.3
+torch==2.10.0
+textual==8.2.1
+pydantic==2.12.5
+dotenv==0.9.9
+google-genai==1.70.0
+pyfiglet==1.0.4
