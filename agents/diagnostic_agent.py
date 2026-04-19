@@ -208,9 +208,13 @@ def _get_fallback(user_text: str) -> SensorSpike:
 #
 # Format: primary_sensor → [(correlated_sensor, intensity_fraction), ...]
 SENSOR_CORRELATIONS: dict[str, list[tuple[str, float]]] = {
-    # Temperature faults → directly stress key degradation sensors
-    "Xs4":  [("Xs2", 0.85), ("Xs3", 0.78)],
-    "Xs5":  [("Xs2", 0.82), ("Xs3", 0.75)],
+    # Temperature / bearing faults → directly stress key degradation sensors
+    # plus secondary thermal, lubrication, structural, and inlet-temp channels
+    # so the LSTM sees multi-channel degradation across the whole window.
+    "Xs4":  [("Xs2", 0.88), ("Xs3", 0.82), ("Xs5", 0.78),
+             ("Xs6", 0.65), ("Xs0", 0.55), ("Xs1", 0.55), ("W3", 0.60)],
+    "Xs5":  [("Xs2", 0.85), ("Xs3", 0.78), ("Xs4", 0.78),
+             ("Xs6", 0.62), ("W3", 0.55)],
     # Pressure faults → co-located thermal stress
     "Xs2":  [("Xs3", 0.82), ("Xs6", 0.65)],
     "Xs6":  [("Xs2", 0.78), ("Xs3", 0.72)],
@@ -266,40 +270,61 @@ def _inject_spike(base_window: np.ndarray, spike: SensorSpike) -> np.ndarray:
     injected = base_window.copy()
     primary_col = SENSOR_TO_COL[spike.sensor_id]
 
-    # ── Clamp spike_value to avoid CNN-LSTM saturation ────────────────────
-    # Model probing (see inference.py): scaled ≥ 0.85 collapses RUL to ~1
-    # regardless of actual severity. Cap the effective scaled target per
-    # severity tier so HIGH/MEDIUM/LOW produce their intended RUL bands
-    # (see schemas.py: HIGH → RUL ≤ 15, MEDIUM → 15-30, LOW → > 30).
-    # Calibrated empirically: scaled 0.78 → RUL 32, scaled 0.90 → RUL 1.
-    # The curve is very steep in the 0.78-0.90 band.
+    # ── Severity → effective scaled target ────────────────────────────────
+    # The CNN-LSTM only drops RUL into the OFFLINE band when the END of
+    # the ramp lands in the model's steep-degradation region.
+    # Empirical model probing (documented in SENSOR_CORRELATIONS comment):
+    #   3-sensor ramp 0.10 → 0.95  →  RUL ~8   (OFFLINE)
+    #   3-sensor ramp 0.10 → 0.85  →  RUL ~32  (DEGRADED)
+    #   3-sensor ramp 0.10 → 0.75  →  RUL ~50  (ONLINE)
+    # Previous caps (HIGH=0.86) silently throttled every HIGH fault to
+    # RUL ~65, so machines never went OFFLINE no matter how severe the
+    # input. Caps are now aligned to the documented model behavior.
     SEVERITY_CAP = {
-        FaultSeverity.HIGH:   0.86,   # → RUL ~8-12  (OFFLINE, RUL ≤ 15)
-        FaultSeverity.MEDIUM: 0.80,   # → RUL ~20-28 (DEGRADED, RUL 15-30)
-        FaultSeverity.LOW:    0.70,   # → RUL ~45+   (ONLINE, RUL > 30)
+        FaultSeverity.HIGH:   0.97,   # → RUL ≤ 12  (OFFLINE, RUL ≤ 15)
+        FaultSeverity.MEDIUM: 0.84,   # → RUL ~20-28 (DEGRADED, 15 < RUL ≤ 30)
+        FaultSeverity.LOW:    0.72,   # → RUL ~40+   (ONLINE, RUL > 30)
     }
     effective_value = min(spike.spike_value, SEVERITY_CAP[spike.fault_severity])
 
+    # ── Ramp floor: lift the START of the ramp by severity ────────────────
+    # A ramp from 0.10 → 0.97 has mean ≈ 0.54, which the LSTM still reads
+    # as "mostly healthy with a recent rise". To make the model actually
+    # see sustained degradation across the whole window for HIGH severity,
+    # we anchor the ramp start above the healthy baseline so the average
+    # ends up inside the steep-degradation band.
+    RAMP_START_FLOOR = {
+        FaultSeverity.HIGH:   0.55,   # ramp avg ≈ 0.76 (in steep band)
+        FaultSeverity.MEDIUM: 0.25,
+        FaultSeverity.LOW:    0.10,
+    }
+    start_floor_scaled = RAMP_START_FLOOR[spike.fault_severity]
+
     # ── Primary sensor: full ramp ─────────────────────────────────────────
-    raw_start = float(injected[0, primary_col])           # current baseline
-    raw_end   = raw_value_for_scaled(primary_col, effective_value)
+    baseline_raw = float(injected[0, primary_col])
+    floor_raw    = raw_value_for_scaled(primary_col, start_floor_scaled)
+    raw_start    = max(baseline_raw, floor_raw)
+    raw_end      = raw_value_for_scaled(primary_col, effective_value)
     ramp = np.linspace(raw_start, raw_end, 50).astype(np.float32)
     injected[:, primary_col] = ramp
 
     log.debug(
         "Spike inject: %s (col %d) ramp %.1f → %.1f (scaled %.2f → %.2f, severity=%s)",
-        spike.sensor_id, primary_col, raw_start, raw_end, 0.10, effective_value,
-        spike.fault_severity,
+        spike.sensor_id, primary_col, raw_start, raw_end,
+        start_floor_scaled, effective_value, spike.fault_severity,
     )
 
     # ── Correlated sensors: scaled ramp ───────────────────────────────────
     correlations = SENSOR_CORRELATIONS.get(spike.sensor_id, [])
     for corr_sensor_id, intensity in correlations:
         corr_col = SENSOR_TO_COL[corr_sensor_id]
-        corr_start = float(injected[0, corr_col])
+        corr_baseline = float(injected[0, corr_col])
         corr_target_scaled = effective_value * intensity
-        corr_end = raw_value_for_scaled(corr_col, corr_target_scaled)
-        corr_ramp = np.linspace(corr_start, corr_end, 50).astype(np.float32)
+        corr_floor_scaled  = start_floor_scaled * intensity
+        corr_floor_raw     = raw_value_for_scaled(corr_col, corr_floor_scaled)
+        corr_start = max(corr_baseline, corr_floor_raw)
+        corr_end   = raw_value_for_scaled(corr_col, corr_target_scaled)
+        corr_ramp  = np.linspace(corr_start, corr_end, 50).astype(np.float32)
         injected[:, corr_col] = corr_ramp
 
         log.debug(
