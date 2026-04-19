@@ -8,7 +8,10 @@ import numpy as np
 from .log_config        import get_logger
 from .input_guard      import is_valid_fault_input
 from .diagnostic_agent import translate_fault_to_tensor
-from .capacity_agent   import update_capacity, get_all_machine_statuses, reset_all
+from .capacity_agent   import (
+    update_capacity, get_all_machine_statuses, reset_all,
+    MACHINES, RUL_OFFLINE_THRESHOLD, RUL_DEGRADED_THRESHOLD,
+)
 from .floor_manager    import issue_dispatch_orders
 from .fallback_cache   import match_scenario
 
@@ -167,6 +170,43 @@ def run_agent_loop(
         rul = 25.0
         oracle_ms = round((time.time() - t2) * 1000, 1)
         log.error("│ [Oracle] ✗ predict_rul failed (%s) → default RUL=%.1f  %.1fms", e, rul, oracle_ms)
+
+    # ── Step 2b: Monotonic-degradation guard ──────────────────────────────────
+    # The CNN-LSTM operates on the per-machine sensor window, which becomes
+    # saturated after repeated chaos prompts on the same machine. Once
+    # saturated, the model bottoms out around RUL ~25 and a new HIGH-severity
+    # fault can no longer push it lower (sometimes the RUL even ticks UP,
+    # which is physically impossible — the machine cannot self-heal in
+    # response to "critical bearing overheat").
+    #
+    # Enforce two physical invariants based on the diagnostic severity:
+    #   1. A HIGH/MEDIUM fault must never INCREASE RUL.
+    #   2. A HIGH fault on an already-DEGRADED machine must trip OFFLINE.
+    #   3. A MEDIUM fault on an OFFLINE machine stays OFFLINE.
+    prev_rul = float(MACHINES[machine_id]["rul"])
+    severity = str(spike_dict.get("fault_severity", "")).upper()
+    is_high   = severity.endswith("HIGH")
+    is_medium = severity.endswith("MEDIUM")
+    raw_rul = rul
+
+    if is_high:
+        # Never improve, force at least a 50% drop, and trip OFFLINE if
+        # the machine was already in the DEGRADED band.
+        rul = min(rul, prev_rul * 0.5)
+        if prev_rul <= RUL_DEGRADED_THRESHOLD:
+            rul = min(rul, float(RUL_OFFLINE_THRESHOLD - 3))   # → 12.0
+    elif is_medium:
+        # Never improve under a MEDIUM fault; honour OFFLINE.
+        rul = min(rul, prev_rul)
+        if prev_rul <= RUL_OFFLINE_THRESHOLD:
+            rul = min(rul, float(RUL_OFFLINE_THRESHOLD - 3))
+
+    rul = max(0.0, rul)
+    if rul != raw_rul:
+        log.info(
+            "│ [Guard] Monotonic clamp: raw=%.1f prev=%.1f severity=%s → final=%.1f",
+            raw_rul, prev_rul, severity, rul,
+        )
 
     # ── Step 3: Capacity Agent ── pure Python math, no LLM ───────────────────
     t3 = time.time()
