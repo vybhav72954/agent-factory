@@ -266,15 +266,30 @@ def _inject_spike(base_window: np.ndarray, spike: SensorSpike) -> np.ndarray:
     injected = base_window.copy()
     primary_col = SENSOR_TO_COL[spike.sensor_id]
 
+    # ── Clamp spike_value to avoid CNN-LSTM saturation ────────────────────
+    # Model probing (see inference.py): scaled ≥ 0.85 collapses RUL to ~1
+    # regardless of actual severity. Cap the effective scaled target per
+    # severity tier so HIGH/MEDIUM/LOW produce their intended RUL bands
+    # (see schemas.py: HIGH → RUL ≤ 15, MEDIUM → 15-30, LOW → > 30).
+    # Calibrated empirically: scaled 0.78 → RUL 32, scaled 0.90 → RUL 1.
+    # The curve is very steep in the 0.78-0.90 band.
+    SEVERITY_CAP = {
+        FaultSeverity.HIGH:   0.86,   # → RUL ~8-12  (OFFLINE, RUL ≤ 15)
+        FaultSeverity.MEDIUM: 0.80,   # → RUL ~20-28 (DEGRADED, RUL 15-30)
+        FaultSeverity.LOW:    0.70,   # → RUL ~45+   (ONLINE, RUL > 30)
+    }
+    effective_value = min(spike.spike_value, SEVERITY_CAP[spike.fault_severity])
+
     # ── Primary sensor: full ramp ─────────────────────────────────────────
     raw_start = float(injected[0, primary_col])           # current baseline
-    raw_end   = raw_value_for_scaled(primary_col, spike.spike_value)
+    raw_end   = raw_value_for_scaled(primary_col, effective_value)
     ramp = np.linspace(raw_start, raw_end, 50).astype(np.float32)
     injected[:, primary_col] = ramp
 
     log.debug(
-        "Spike inject: %s (col %d) ramp %.1f → %.1f (scaled %.2f → %.2f)",
-        spike.sensor_id, primary_col, raw_start, raw_end, 0.10, spike.spike_value,
+        "Spike inject: %s (col %d) ramp %.1f → %.1f (scaled %.2f → %.2f, severity=%s)",
+        spike.sensor_id, primary_col, raw_start, raw_end, 0.10, effective_value,
+        spike.fault_severity,
     )
 
     # ── Correlated sensors: scaled ramp ───────────────────────────────────
@@ -282,7 +297,7 @@ def _inject_spike(base_window: np.ndarray, spike: SensorSpike) -> np.ndarray:
     for corr_sensor_id, intensity in correlations:
         corr_col = SENSOR_TO_COL[corr_sensor_id]
         corr_start = float(injected[0, corr_col])
-        corr_target_scaled = spike.spike_value * intensity
+        corr_target_scaled = effective_value * intensity
         corr_end = raw_value_for_scaled(corr_col, corr_target_scaled)
         corr_ramp = np.linspace(corr_start, corr_end, 50).astype(np.float32)
         injected[:, corr_col] = corr_ramp
