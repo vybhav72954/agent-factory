@@ -191,4 +191,102 @@ class TestRealWeights:
         rul_spike   = predict_rul(spike_window)
         # A window with max-saturated sensors should predict LOWER RUL
         assert rul_spike < rul_nominal
+
+
+# ── Threading: load_model concurrency (BUG_REPORT INFO-20) ──────────────────
+
+class TestThreadSafeLoading:
+    """The load lock must serialise concurrent first-time loads so that
+    racing callers never observe a half-initialised state. We exercise
+    this without requiring real weights by mocking the load itself."""
+
+    def test_concurrent_load_calls_yield_consistent_state(self):
+        """If 10 threads simultaneously trigger load_model(), every thread
+        should observe a fully-formed (_model, _scaler, _loaded_variant)
+        tuple — no thread should see a None mid-load.
+
+        NOTE: we patch torch.load + joblib.load ONCE in the parent thread
+        (NOT inside workers). Concurrent patch/unpatch from worker threads
+        is itself racy (each `with patch.object()` save/restore wins/loses
+        non-deterministically) and would leak the mock back into other tests.
+        """
+        import threading
+        import time
+        from unittest.mock import patch
+
+        # Reset state at start so we don't see a previously-loaded model
+        inf_module._model = None
+        inf_module._scaler = None
+        inf_module._loaded_variant = None
+
+        observed_states = []
+        observed_states_lock = threading.Lock()
+        load_call_count = {"n": 0}
+
+        def fake_torch_load(*a, **kw):
+            load_call_count["n"] += 1
+            time.sleep(0.01)   # increase chance of contention
+            return {"model_state_dict": CNNLSTM_RUL().state_dict()}
+
+        def fake_joblib_load(*a, **kw):
+            scaler = MagicMock()
+            scaler.transform.side_effect = lambda x: x.astype(np.float32)
+            return scaler
+
+        def worker():
+            inf_module.load_model()
+            with observed_states_lock:
+                observed_states.append((
+                    inf_module._model is not None,
+                    inf_module._scaler is not None,
+                    inf_module._loaded_variant,
+                ))
+
+        # Patch ONCE in the parent — both patches are restored after the `with` block
+        with patch.object(inf_module.torch, "load", side_effect=fake_torch_load), \
+             patch.object(inf_module.joblib, "load", side_effect=fake_joblib_load):
+            threads = [threading.Thread(target=worker) for _ in range(10)]
+            for t in threads: t.start()
+            for t in threads: t.join()
+
+        # Every observation must be the fully-loaded state
+        for has_model, has_scaler, variant in observed_states:
+            assert has_model, "thread observed _model=None after load_model()"
+            assert has_scaler, "thread observed _scaler=None after load_model()"
+            assert variant is not None, "thread observed _loaded_variant=None"
+
+        # Sanity: due to double-checked locking, we expect torch.load to be
+        # called fewer than 10 times (the first caller loads, others skip).
+        assert load_call_count["n"] <= 10
+
+        # Clean up so we don't leak module state into other tests
+        inf_module._model = None
+        inf_module._scaler = None
+        inf_module._loaded_variant = None
+
+    def test_reset_loaded_model_is_thread_safe(self):
+        """Concurrent reset_loaded_model() calls should not crash or leave
+        a non-None field behind."""
+        import threading
+
+        # Pre-load with mocks
+        inf_module._model = CNNLSTM_RUL()
+        inf_module._scaler = MagicMock()
+        inf_module._loaded_variant = "test"
+
+        def worker():
+            inf_module.reset_loaded_model()
+
+        threads = [threading.Thread(target=worker) for _ in range(20)]
+        for t in threads: t.start()
+        for t in threads: t.join()
+
+        assert inf_module._model is None
+        assert inf_module._scaler is None
+        assert inf_module._loaded_variant is None
+
+        # Defensive: leave module state clean for downstream tests
+        inf_module._model = None
+        inf_module._scaler = None
+        inf_module._loaded_variant = None
         

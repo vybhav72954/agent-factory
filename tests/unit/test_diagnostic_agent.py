@@ -150,15 +150,15 @@ class TestSpikeInjection:
 
 class TestFallbackKeywordMatching:
     @pytest.mark.parametrize("text, expected_sensor", [
-        ("bearing temperature surge on Machine 4",  "Xs4"),
-        ("temperature overheat detected",           "Xs4"),
-        ("pressure spike in hydraulic line",        "Xs2"),
-        ("vibration and shaking on CNC-Alpha",      "Xs7"),
-        ("coolant leak near the pump",              "Xs12"),
-        ("RPM fluctuation on motor",                "Xs10"),
-        ("speed drop on drive belt",                "Xs10"),
-        ("overload condition on machine",           "W0"),
-        ("completely unrecognized random text here", "Xs4"),  # default
+        ("bearing temperature surge on Machine 4",  "Xs2"),
+        ("temperature overheat detected",           "Xs2"),
+        ("pressure spike in hydraulic line",        "Xs4"),
+        ("vibration and shaking on CNC-Alpha",      "Xs0"),
+        ("coolant leak near the pump",              "W3"),
+        ("RPM fluctuation on motor",                "W0"),
+        ("speed drop on drive belt",                "W0"),
+        ("overload condition on machine",           "Xs6"),
+        ("completely unrecognized random text here", "Xs2"),  # default
     ])
     def test_fallback_maps_text_to_correct_sensor(self, text, expected_sensor):
         spike = _get_fallback(text)

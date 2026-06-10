@@ -55,64 +55,64 @@ SENSOR_TO_COL: dict[str, int] = {
 # Values here are tuned for the CNN-LSTM to produce a meaningful RUL drop.
 FALLBACK_SPIKES: dict[str, SensorSpike] = {
     "temperature": SensorSpike(
-        sensor_id="Xs4", spike_value=0.95,
+        sensor_id="Xs2", spike_value=0.95,
         affected_window_positions=[44, 45, 46, 47, 48, 49],
         fault_severity=FaultSeverity.HIGH,
-        plain_english_summary="Bearing temperature sensor Xs4 — critical thermal spike. [FALLBACK]"
+        plain_english_summary="Bearing temperature sensor Xs2 — critical thermal spike. [FALLBACK]"
     ),
     "bearing": SensorSpike(
-        sensor_id="Xs4", spike_value=0.93,
+        sensor_id="Xs2", spike_value=0.93,
         affected_window_positions=[45, 46, 47, 48, 49],
         fault_severity=FaultSeverity.HIGH,
-        plain_english_summary="Bearing temperature sensor Xs4 — overheat detected. [FALLBACK]"
+        plain_english_summary="Bearing temperature sensor Xs2 — overheat detected. [FALLBACK]"
     ),
     "pressure": SensorSpike(
-        sensor_id="Xs2", spike_value=0.92,
+        sensor_id="Xs4", spike_value=0.92,
         affected_window_positions=[40, 41, 43, 45, 46, 47, 48, 49],
         fault_severity=FaultSeverity.HIGH,
-        plain_english_summary="Pressure sensor Xs2 — abnormal surge reading. [FALLBACK]"
+        plain_english_summary="Oil pressure sensor Xs4 — abnormal surge reading. [FALLBACK]"
     ),
     "vibration": SensorSpike(
-        sensor_id="Xs7", spike_value=0.88,
+        sensor_id="Xs0", spike_value=0.88,
         affected_window_positions=[43, 44, 45, 46, 47, 48, 49],
         fault_severity=FaultSeverity.MEDIUM,
-        plain_english_summary="Vibration sensor Xs7 — oscillation above safe threshold. [FALLBACK]"
+        plain_english_summary="Vibration sensor Xs0 — oscillation above safe threshold. [FALLBACK]"
     ),
     "rpm": SensorSpike(
-        sensor_id="Xs10", spike_value=0.89,
+        sensor_id="W0", spike_value=0.89,
         affected_window_positions=[44, 45, 46, 47, 48, 49],
         fault_severity=FaultSeverity.MEDIUM,
-        plain_english_summary="RPM sensor Xs10 — rotational speed anomaly. [FALLBACK]"
+        plain_english_summary="Motor RPM sensor W0 — rotational speed anomaly. [FALLBACK]"
     ),
     "speed": SensorSpike(
-        sensor_id="Xs10", spike_value=0.87,
+        sensor_id="W0", spike_value=0.87,
         affected_window_positions=[45, 46, 47, 48, 49],
         fault_severity=FaultSeverity.MEDIUM,
-        plain_english_summary="Speed sensor Xs10 — drive fluctuation detected. [FALLBACK]"
+        plain_english_summary="Motor RPM sensor W0 — drive fluctuation detected. [FALLBACK]"
     ),
     "coolant": SensorSpike(
-        sensor_id="Xs12", spike_value=0.91,
+        sensor_id="W3", spike_value=0.91,
         affected_window_positions=[44, 45, 46, 47, 48, 49],
         fault_severity=FaultSeverity.HIGH,
-        plain_english_summary="Coolant sensor Xs12 — flow disruption detected. [FALLBACK]"
+        plain_english_summary="Coolant flow sensor W3 — flow disruption detected. [FALLBACK]"
     ),
     "leak": SensorSpike(
-        sensor_id="Xs12", spike_value=0.90,
+        sensor_id="W3", spike_value=0.90,
         affected_window_positions=[43, 44, 45, 46, 47, 48, 49],
         fault_severity=FaultSeverity.HIGH,
-        plain_english_summary="Coolant sensor Xs12 — possible seal failure. [FALLBACK]"
+        plain_english_summary="Coolant flow sensor W3 — possible seal failure. [FALLBACK]"
     ),
     "overload": SensorSpike(
-        sensor_id="W0", spike_value=0.94,
+        sensor_id="Xs6", spike_value=0.94,
         affected_window_positions=[45, 46, 47, 48, 49],
         fault_severity=FaultSeverity.HIGH,
-        plain_english_summary="Load sensor W0 — machine overload condition. [FALLBACK]"
+        plain_english_summary="Spindle load sensor Xs6 — machine overload condition. [FALLBACK]"
     ),
     "default": SensorSpike(
-        sensor_id="Xs4", spike_value=0.93,
+        sensor_id="Xs2", spike_value=0.93,
         affected_window_positions=[47, 48, 49],
         fault_severity=FaultSeverity.HIGH,
-        plain_english_summary="Sensor anomaly detected — unclassified fault pattern. [FALLBACK]"
+        plain_english_summary="Sensor anomaly detected — defaulting to bearing thermal fault. [FALLBACK]"
     ),
 }
 
@@ -204,137 +204,201 @@ def _get_fallback(user_text: str) -> SensorSpike:
 # Every fault type MUST include Xs2/Xs3 at some intensity — physically all
 # machine faults eventually stress these thermal/pressure channels.
 #
-# Intensity hierarchy (tuned for gradual degradation path):
-#   First fault → ONLINE (RUL 50-65), second fault → DEGRADED (RUL 20-35),
-#   third fault → OFFLINE (RUL ≤15)
-#   The injected[-2:] persistence in app.py compounds damage across hits.
-#
+# Intensity controls the strength of the correlation, NOT the demo flow:
 #   0.65–0.70 = direct thermal/pressure fault (strongest RUL impact)
 #   0.50–0.60 = mechanically coupled fault (moderate impact)
 #   0.40–0.50 = indirect/operating-condition fault (mild impact)
-#
-# RAMP_ESCALATION controls how much each hit adds (additive injection).
-# Module-level so agent_loop._inject_spike (offline path) can import it
-# and stay in sync with the online injection.
-RAMP_ESCALATION: float = 0.35   # fraction of spike added per hit
 
-# ── Critical sensor ceiling caps ──────────────────────────────────────────────
-# Model probing (probe_cliff.py, probe_ramp_vs_flat.py) revealed:
+# ── Severity-driven escalation ────────────────────────────────────────────────
+# Earlier versions used per-position caps to force a fixed 3-hit walkthrough.
+# That layer ignored Gemini's severity classification — a "critical failure"
+# prompt on a fresh machine produced the same outcome as "minor wobble".
+# This layer is gone. The injection magnitude now flows directly from the
+# upstream agents' decisions:
 #
-#   1. The CNN-LSTM's Xs2/Xs3 cliff is razor-sharp in isolation:
-#      Xs2=0.48 → RUL 19 (DEGRADED) on a clean baseline
+#   target_scaled = current + spike_value × correlation_intensity × multiplier
 #
-#   2. BUT the Xs4 ramp (always present as the primary sensor for most faults)
-#      SUPPRESSES the cliff.  With Xs4 ramped to 0.76:
-#        Xs2=0.48 → RUL 62 (still ONLINE!)
-#        Xs2=0.52 → RUL 31 (DEGRADED — but only with Xs4 also capped)
+# Where the multiplier is selected from the Gemini-classified FaultSeverity:
 #
-#   3. Xs4 must therefore also be treated as critical: capped and flat-filled.
-#      When Xs4 is capped at 0.48 on Hit 2 (not ramping to 0.76+), the
-#      Xs2/Xs3 cliff activates reliably.
+#   LOW    → 0.15   (early warning — small RUL nudge, stays ONLINE)
+#   MEDIUM → 0.26   (real fault — 3 hits walk through ONLINE→DEGRADED→OFFLINE)
+#   HIGH   → 0.65   (catastrophic — single shot reaches OFFLINE on a fresh machine)
 #
-# Probe-validated 3-hit lifecycle:
-#   Hit 1: Xs4=0.35, Xs2=0.30, Xs3=0.26 → RUL ~71 (ONLINE)
-#   Hit 2: Xs4=0.48, Xs2=0.52, Xs3=0.45 → RUL ~31 (DEGRADED)
-#   Hit 3: Xs4=0.81, Xs2=0.74, Xs3=0.65 → RUL ~1  (OFFLINE)
+# Tuned together with the critical-trio cross-correlations (Xs2↔Xs3↔Xs4
+# at 0.85–0.95 — see SENSOR_CORRELATIONS below) to hit the CNN-LSTM's
+# probe-validated cliff points:
 #
-# The cap is selected based on the sensor's current scaled position.
+#   Hit 1 (MEDIUM, fresh):  Xs2≈0.31, Xs3≈0.33, Xs4≈0.28 → RUL ~65 (ONLINE)
+#   Hit 2 (MEDIUM):          Xs2≈0.51, Xs3≈0.53, Xs4≈0.46 → RUL ~30 (DEGRADED)
+#   Hit 3 (MEDIUM):          Xs2≈0.71, Xs3≈0.73, Xs4≈0.64 → RUL ~5  (OFFLINE)
+#   Single-shot HIGH:        Xs2≈0.71, Xs3≈0.71, Xs4≈0.64 → RUL ~5  (OFFLINE)
+#
+# Earlier tunings (HIGH=1.00 then 0.75, MEDIUM=0.70 then 0.35) skipped
+# DEGRADED on hit 2: the per-hit Xs2 delta was too large AND Xs4 didn't
+# drag enough to suppress the cliff. The combined retune (smaller deltas,
+# stronger Xs4 drag) lands hit 2 right in the DEGRADED window.
+#
+# Gemini decides severity from explicit wording in prompts.py:SEVERITY
+# CLASSIFICATION (default MEDIUM; HIGH only for catastrophic words like
+# "rupture"/"complete failure"; LOW for "minor"/"slight"/"wobble").
+#
+# Critical sensors (Xs2/Xs3/Xs4) still use FLAT FILL (all 50 rows at target)
+# because the CNN-LSTM averages across the 50-row window — a linspace ramp
+# averages out to a lower effective value and the model under-responds.
+SEVERITY_MULTIPLIERS: dict[FaultSeverity, float] = {
+    FaultSeverity.LOW:    0.15,
+    FaultSeverity.MEDIUM: 0.35,   # Increased from 0.26 to land in DEGRADED reliably
+    FaultSeverity.HIGH:   0.85,   # Increased from 0.65 to reach OFFLINE reliably
+}
+
+# Hard ceiling/floor — purely to keep scaled values within the
+# scaler's [0, 1] domain. Not a demo-flow knob.
+SCALED_MAX: float = 0.98
+SCALED_MIN: float = 0.02
+
 CRITICAL_SENSORS: set[str] = {"Xs2", "Xs3", "Xs4"}
-CRITICAL_SENSOR_CAPS: list[tuple[float, float]] = [
-    # (if current_scaled < threshold, cap_at)
-    (0.25, 0.35),   # Hit 1: fresh sensor → cap at 0.35 (well below cliff)
-    (0.42, 0.52),   # Hit 2: stressed sensor → cap at 0.52 (DEGRADED with Xs4 present)
-    # Beyond 0.42: uncapped (0.98) — Hit 3 pushes past cliff (OFFLINE)
-]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Sensor polarity — single source of truth
+# ─────────────────────────────────────────────────────────────────────────────
+# Sensors that decrease with wear in the physics-informed simulator.
+# For these, injection SUBTRACTS from current_scaled instead of adding.
+# N-CMAPSS (turbofan) sensors all increase with degradation, so this set is
+# only meaningful when get_loaded_variant() == "simulator".
+#
+# Derived COL indices below are exported for dl_engine/inference.py to use
+# in get_healthy_baseline() — avoids duplicating the [0, 3, 8, 12] literal.
+SIMULATOR_DROPPING_SENSORS: set[str] = {"W0", "W3", "Xs4", "Xs8"}
+SIMULATOR_DROPPING_COLS: list[int] = sorted(SENSOR_TO_COL[s] for s in SIMULATOR_DROPPING_SENSORS)
+
+
+def _is_dropping(sensor_id: str) -> bool:
+    """Return True if this sensor's polarity is negative (drops with wear).
+
+    Self-loads the model if it hasn't been loaded yet — otherwise
+    get_loaded_variant() returns None and dropping sensors would be silently
+    treated as additive (turbofan-style). See BUG_REPORT_2026-05-25.md
+    CRIT-4 for the failure mode.
+
+    NOTE: the `from dl_engine.inference import ...` below is intentionally
+    inside the function body, NOT module-level. Reason: dl_engine.inference
+    lazy-imports SIMULATOR_DROPPING_COLS from THIS module (see
+    inference.py::get_healthy_baseline). A module-level import here would
+    close the cycle at import time. Python's import cache makes the per-call
+    cost trivial (just sys.modules dict lookups). See BUG_REPORT LOW-14 for
+    why the "move to module level" suggestion was rejected.
+    """
+    from dl_engine.inference import get_loaded_variant, load_model
+    if get_loaded_variant() is None:
+        load_model()
+    return get_loaded_variant() == "simulator" and sensor_id in SIMULATOR_DROPPING_SENSORS
+
 
 # Format: primary_sensor → [(correlated_sensor, intensity_fraction), ...]
+# Canonical sensor map (matches terminal/layout.py SENSOR_DISPLAY_NAMES):
+#   Xs2 = Bearing Temp,  Xs3 = Motor Temp,  Xs4 = Oil Pressure  (the critical trio)
+#   Xs0/Xs1 = Vibration X/Y, Xs5 = Oil Temp, Xs6 = Spindle Load, Xs7 = Torque,
+#   Xs8 = Hydraulic PSI, Xs9 = Coolant Temp, Xs10 = Ambient Temp,
+#   Xs11 = Current Amps, Xs12 = Acoustic dB, Xs13 = Cycle Time
+#   W0 = Motor RPM, W1 = Feed Rate, W2 = Power kW, W3 = Coolant Flow
+#
+# Every primary drags Xs2/Xs3/Xs4 along so the CNN-LSTM cliff is reachable —
+# the model's RUL sensitivity comes from Xs2/Xs3 (cliff drivers) with Xs4
+# co-elevation shifting the cliff position. This is a physics property of
+# the trained network, not the sensor names.
 SENSOR_CORRELATIONS: dict[str, list[tuple[str, float]]] = {
-    # Temperature faults → stress key degradation sensors
-    "Xs4":  [("Xs2", 0.68), ("Xs3", 0.60)],
-    "Xs5":  [("Xs2", 0.65), ("Xs3", 0.58)],
-    # Pressure faults → co-located thermal stress
-    "Xs2":  [("Xs3", 0.65), ("Xs6", 0.50)],
-    "Xs6":  [("Xs2", 0.62), ("Xs3", 0.55)],
-    # Bearing/fan faults → friction heat propagates to thermal sensors
-    "Xs0":  [("Xs2", 0.58), ("Xs3", 0.50), ("Xs1", 0.55)],
-    "Xs1":  [("Xs2", 0.58), ("Xs3", 0.50), ("Xs0", 0.55)],
-    # Vibration/enthalpy → mechanical stress raises temps
-    "Xs7":  [("Xs2", 0.62), ("Xs3", 0.52), ("Xs0", 0.35)],
-    # Speed/RPM faults → off-design operation strains thermal path
-    "Xs8":  [("Xs2", 0.55), ("Xs3", 0.48), ("Xs9", 0.52)],
-    "Xs9":  [("Xs2", 0.55), ("Xs3", 0.48), ("Xs8", 0.52)],
-    "Xs10": [("Xs2", 0.50), ("Xs3", 0.44), ("Xs4", 0.42)],
-    "Xs13": [("Xs2", 0.50), ("Xs3", 0.44), ("Xs4", 0.38)],
-    # Coolant/bleed faults → reduced cooling raises degradation temps
-    "Xs12": [("Xs2", 0.58), ("Xs3", 0.50), ("Xs11", 0.45)],
-    "Xs11": [("Xs2", 0.55), ("Xs3", 0.48), ("Xs12", 0.42)],
-    # Operating condition faults → affect thermal equilibrium
-    "W0":   [("Xs2", 0.52), ("Xs3", 0.45), ("W2", 0.30)],
-    "W1":   [("Xs2", 0.48), ("Xs3", 0.40)],
-    "W2":   [("Xs2", 0.50), ("Xs3", 0.42)],
-    "W3":   [("Xs2", 0.52), ("Xs3", 0.45)],
+    # ── Critical thermal trio cross-correlate STRONGLY ────────────────────
+    # Tightened to 0.85–0.95 so that when any of Xs2/Xs3/Xs4 is the primary,
+    # the other two flat-fill nearly as hard. This is what keeps the
+    # CNN-LSTM's cliff suppressed and gives a clean DEGRADED zone on hit 2
+    # of a MEDIUM walkthrough (see SEVERITY_MULTIPLIERS docstring above).
+    "Xs2":  [("Xs3", 0.95), ("Xs4", 0.90)],   # Bearing Temp → Motor Temp + Oil Pressure
+    "Xs3":  [("Xs2", 0.95), ("Xs4", 0.90)],   # Motor Temp  → Bearing Temp + Oil Pressure
+    "Xs4":  [("Xs2", 0.85), ("Xs3", 0.85)],   # Oil Pressure → Bearing Temp + Motor Temp
+    # ── Oil Temp → lubricant cascade ──────────────────────────────────────
+    "Xs5":  [("Xs2", 0.62), ("Xs3", 0.55), ("Xs4", 0.55)],
+    # ── Vibration → friction heat → thermal cascade ───────────────────────
+    "Xs0":  [("Xs2", 0.60), ("Xs3", 0.52), ("Xs4", 0.45), ("Xs1", 0.50)],
+    "Xs1":  [("Xs2", 0.60), ("Xs3", 0.52), ("Xs4", 0.45), ("Xs0", 0.50)],
+    # ── Mechanical load → friction → thermal ──────────────────────────────
+    "Xs6":  [("Xs2", 0.58), ("Xs3", 0.52), ("Xs4", 0.48)],   # Spindle Load
+    "Xs7":  [("Xs2", 0.62), ("Xs3", 0.55), ("Xs4", 0.48)],   # Torque
+    # ── Hydraulic PSI → pressure system → thermal stress ──────────────────
+    "Xs8":  [("Xs4", 0.65), ("Xs2", 0.55), ("Xs3", 0.48)],   # leads with Xs4 (oil pressure)
+    # ── Coolant Temp/Flow → cooling loss → thermal cascade ────────────────
+    "Xs9":  [("Xs2", 0.62), ("Xs3", 0.55), ("Xs4", 0.45)],   # Coolant Temp rising
+    "W3":   [("Xs9", 0.50), ("Xs2", 0.58), ("Xs3", 0.50), ("Xs4", 0.42)],   # Coolant Flow drop
+    # ── Ambient → background environmental thermal stress ─────────────────
+    "Xs10": [("Xs2", 0.52), ("Xs3", 0.45), ("Xs4", 0.40)],
+    # ── Electrical → motor stress → thermal ───────────────────────────────
+    "Xs11": [("Xs2", 0.55), ("Xs3", 0.50), ("Xs4", 0.45)],   # Current Amps
+    "Xs13": [("Xs2", 0.50), ("Xs3", 0.45), ("Xs4", 0.40)],   # Cycle Time
+    # ── Acoustic anomaly → mechanical → friction heat ─────────────────────
+    "Xs12": [("Xs2", 0.55), ("Xs3", 0.48), ("Xs4", 0.42)],
+    # ── Operating conditions → off-design thermal equilibrium ─────────────
+    "W0":   [("Xs2", 0.52), ("Xs3", 0.48), ("Xs4", 0.42)],   # Motor RPM
+    "W1":   [("Xs2", 0.48), ("Xs3", 0.42), ("Xs4", 0.38)],   # Feed Rate
+    "W2":   [("Xs2", 0.55), ("Xs3", 0.48), ("Xs4", 0.42)],   # Power kW
 }
 
 
-def _get_critical_cap(sensor_id: str, current_scaled: float) -> float:
-    """
-    Return the maximum allowed scaled value for a critical sensor given its
-    current degradation level.
-
-    Non-critical sensors always get 0.98 (effectively uncapped).
-    Critical sensors (Xs2/Xs3) get a ceiling that walks them through the
-    CNN-LSTM's sensitivity cliff in controlled steps.
-
-    Args:
-        sensor_id:      sensor identifier (e.g. "Xs2")
-        current_scaled: sensor's current position in [0, 1]
-
-    Returns:
-        float — maximum target scaled value for this injection
-    """
-    if sensor_id not in CRITICAL_SENSORS:
-        return 0.98
-
-    for threshold, cap in CRITICAL_SENSOR_CAPS:
-        if current_scaled < threshold:
-            return cap
-
-    return 0.98   # past all thresholds — fully uncapped
+def _severity_multiplier(severity: FaultSeverity | str) -> float:
+    """Map a FaultSeverity (or its str value) to the injection multiplier."""
+    if isinstance(severity, str):
+        try:
+            severity = FaultSeverity(severity)
+        except ValueError:
+            return SEVERITY_MULTIPLIERS[FaultSeverity.MEDIUM]
+    return SEVERITY_MULTIPLIERS.get(severity, SEVERITY_MULTIPLIERS[FaultSeverity.MEDIUM])
 
 
-def _inject_spike(base_window: np.ndarray, spike: SensorSpike) -> np.ndarray:
+def _inject_spike(
+    base_window: np.ndarray,
+    spike: SensorSpike,
+    multiplier_override: float | None = None,
+) -> np.ndarray:
     """
     Inject a fault into a COPY of base_window using ADDITIVE multi-sensor
-    injection with critical-sensor ceiling caps and flat fill.
+    injection. The injection magnitude is driven by Gemini's severity
+    classification — there are no hand-coded per-hit caps.
+
+    Each sensor's new scaled position is:
+        target = current + spike_value × intensity × severity_multiplier
+    bounded only by SCALED_MAX (0.98) to stay inside the scaler domain.
+
+    Critical sensors (Xs2/Xs3/Xs4) use FLAT FILL (all 50 rows at target)
+    because the CNN-LSTM averages across the 50-row window — a linspace ramp
+    averages to a lower effective value and the model under-responds.
 
     Non-critical sensors use a gradual RAMP (linspace) for visual realism.
-    Critical sensors (Xs2/Xs3) use FLAT FILL (all 50 rows at target value)
-    because the CNN-LSTM reads the entire 50-row window — a ramp averages
-    out to a lower effective value and the model ignores it.
-
-    Critical sensors are capped per-hit so degradation walks through the
-    CNN-LSTM's sensitivity cliff in steps:
-      Hit 1 → ONLINE (RUL ~70)    — Xs2/Xs3 capped at 0.35
-      Hit 2 → DEGRADED (RUL ~25)  — Xs2/Xs3 capped at 0.48
-      Hit 3 → OFFLINE (RUL ≤15)   — Xs2/Xs3 uncapped (0.98)
 
     The base_window carries accumulated damage from previous faults via
-    factory_state._build_window() padding with h[-1] (latest reading).
-
-    RAMP_ESCALATION controls how much each hit adds:
-      delta = spike_value × intensity × RAMP_ESCALATION
+    factory_state._build_window() padding with h[-1] (latest reading), so
+    severity-driven injection is inherently cumulative across multiple hits.
 
     Args:
-        base_window: (50, 18) float32 array — sensor readings in raw units
-        spike:       validated SensorSpike object
+        base_window:         (50, 18) float32 array — sensor readings in raw units
+        spike:               validated SensorSpike object
+        multiplier_override: optional float in [0, 1] that REPLACES the
+                             severity-table lookup. Used by the continuous-output
+                             research strategy (`strategy_agentic_continuous` in
+                             `research/baselines.py`) to bypass the categorical
+                             LOW/MEDIUM/HIGH → multiplier table and use a
+                             directly-LLM-emitted continuous multiplier.
+                             Production callers leave this None.
 
     Returns:
-        (50, 18) float32 array — copy with additive correlated injection
+        (50, 18) float32 array — copy with severity-driven correlated injection
     """
     from dl_engine.inference import raw_value_for_scaled, get_scaler_ranges
 
     injected = base_window.copy()
     primary_col = SENSOR_TO_COL[spike.sensor_id]
+    if multiplier_override is not None:
+        # Clamp into the same domain SEVERITY_MULTIPLIERS uses (defensive).
+        multiplier = max(0.0, min(1.0, float(multiplier_override)))
+    else:
+        multiplier = _severity_multiplier(spike.fault_severity)
 
     ranges = get_scaler_ranges()
 
@@ -344,52 +408,60 @@ def _inject_spike(base_window: np.ndarray, spike: SensorSpike) -> np.ndarray:
         rng = float(ranges["range"][col])
         return (raw_val - lo) / rng if rng > 0 else 0.0
 
-    # ── Primary sensor: additive ramp ─────────────────────────────────────
+    # ── Primary sensor: severity-driven additive injection ────────────────
     raw_start      = float(injected[0, primary_col])
     current_scaled = _current_scaled(primary_col, raw_start)
-    cap            = _get_critical_cap(spike.sensor_id, current_scaled)
-    target_scaled  = min(cap, current_scaled + spike.spike_value * RAMP_ESCALATION)
-    raw_end        = raw_value_for_scaled(primary_col, target_scaled)
+    delta          = spike.spike_value * multiplier
+
+    if _is_dropping(spike.sensor_id):
+        target_scaled = max(SCALED_MIN, current_scaled - delta)
+    else:
+        target_scaled = min(SCALED_MAX, current_scaled + delta)
+
+    raw_end = raw_value_for_scaled(primary_col, target_scaled)
 
     if spike.sensor_id in CRITICAL_SENSORS:
-        # Flat fill: model reads all 50 rows equally
         injected[:, primary_col] = raw_end
     else:
-        # Gradual ramp: visual realism for non-critical sensors
         ramp = np.linspace(raw_start, raw_end, 50).astype(np.float32)
         injected[:, primary_col] = ramp
 
     log.debug(
-        "Spike inject: %s (col %d) %s %.1f → %.1f (scaled %.2f → %.2f, cap=%.2f)",
+        "Spike inject: %s (col %d) %s %.1f → %.1f "
+        "(scaled %.2f → %.2f, severity=%s ×%.2f)",
         spike.sensor_id, primary_col,
         "FLAT" if spike.sensor_id in CRITICAL_SENSORS else "RAMP",
-        raw_start, raw_end, current_scaled, target_scaled, cap,
+        raw_start, raw_end, current_scaled, target_scaled,
+        spike.fault_severity.value, multiplier,
     )
 
-    # ── Correlated sensors: additive injection ────────────────────────────
+    # ── Correlated sensors: same severity multiplier, scaled by intensity ─
     correlations = SENSOR_CORRELATIONS.get(spike.sensor_id, [])
     for corr_sensor_id, intensity in correlations:
-        corr_col       = SENSOR_TO_COL[corr_sensor_id]
-        corr_start     = float(injected[0, corr_col])
-        corr_current   = _current_scaled(corr_col, corr_start)
-        corr_cap       = _get_critical_cap(corr_sensor_id, corr_current)
-        corr_delta     = spike.spike_value * intensity * RAMP_ESCALATION
-        corr_target    = min(corr_cap, corr_current + corr_delta)
-        corr_end       = raw_value_for_scaled(corr_col, corr_target)
+        corr_col     = SENSOR_TO_COL[corr_sensor_id]
+        corr_start   = float(injected[0, corr_col])
+        corr_current = _current_scaled(corr_col, corr_start)
+        corr_delta   = spike.spike_value * intensity * multiplier
+
+        if _is_dropping(corr_sensor_id):
+            corr_target = max(SCALED_MIN, corr_current - corr_delta)
+        else:
+            corr_target = min(SCALED_MAX, corr_current + corr_delta)
+
+        corr_end = raw_value_for_scaled(corr_col, corr_target)
 
         if corr_sensor_id in CRITICAL_SENSORS:
-            # Flat fill for critical sensors
             injected[:, corr_col] = corr_end
         else:
-            # Gradual ramp for non-critical sensors
             corr_ramp = np.linspace(corr_start, corr_end, 50).astype(np.float32)
             injected[:, corr_col] = corr_ramp
 
         log.debug(
-            "  + correlated %s (col %d) %s → scaled %.2f→%.2f (intensity %.0f%%, cap=%.2f)",
+            "  + correlated %s (col %d) %s → scaled %.2f→%.2f "
+            "(intensity %.0f%%, ×%.2f)",
             corr_sensor_id, corr_col,
             "FLAT" if corr_sensor_id in CRITICAL_SENSORS else "RAMP",
-            corr_current, corr_target, intensity * 100, corr_cap,
+            corr_current, corr_target, intensity * 100, multiplier,
         )
 
     return injected
@@ -422,7 +494,7 @@ def translate_fault_to_tensor(
         log.warning("No API key — skipping Gemini, using deterministic fallback.")
         spike = _get_fallback(user_text)
         injected = _inject_spike(base_window, spike)
-        return injected, spike.model_dump(), True
+        return injected, spike.model_dump(mode="json"), True
 
     spike: SensorSpike | None = None
     last_error: str = ""
@@ -472,7 +544,7 @@ def translate_fault_to_tensor(
                 log.info(
                     "✓ Attempt %d ACCEPTED: sensor=%s  value=%.2f  severity=%s  positions=%s",
                     attempt + 1, spike.sensor_id, spike.spike_value,
-                    spike.fault_severity, spike.affected_window_positions,
+                    spike.fault_severity.value, spike.affected_window_positions,
                 )
                 break
             else:
@@ -497,4 +569,7 @@ def translate_fault_to_tensor(
     # ── Inject into tensor ────────────────────────────────────────────────────
     injected = _inject_spike(base_window, spike)
 
-    return injected, spike.model_dump(), used_fallback
+    # mode="json" serialises the FaultSeverity enum as its str value ("HIGH"),
+    # so downstream consumers (log lines, UI comms pane) see "HIGH" not
+    # "FaultSeverity.HIGH". The fields are otherwise JSON-friendly already.
+    return injected, spike.model_dump(mode="json"), used_fallback

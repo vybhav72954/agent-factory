@@ -5,6 +5,8 @@ test_inference_local.py
 test_*.py
 probe_ramp_vs_flat.py
 probe_cliff.py
+REPRODUCE.md
+research/results/*
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -318,3 +320,24 @@ dmypy.json
 cython_debug/
 
 publication_output
+
+# ─── Research folder — archived / internal / submission artifacts ─────────────
+research/Old_results/
+research/RESS/
+research/paper_assets/
+research/paper_draft.md
+research/related_work.md
+research/BUG_REPORT_*.md
+research/extensions_roadmap.md
+
+# ─── Research — large data files (reproduced via generate_training_data.py) ───
+research/simulator/data/
+
+# ─── Model weight backups ─────────────────────────────────────────────────────
+dl_engine/weights/*.bak
+
+# ─── Generated images ─────────────────────────────────────────────────────────
+*.png
+
+# ─── Word / Office temp lock files ────────────────────────────────────────────
+~$*

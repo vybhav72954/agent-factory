@@ -66,10 +66,14 @@ class TestMatchScenario:
     def test_keyword_matches_correct_scenario(self, text, expected_key):
         scenario = match_scenario(text)
         assert scenario is not None, f"No scenario matched for: {text!r}"
-        # The matched scenario's spike sensor should match expected
-        bearing_sensors = {"Xs4"}
-        pressure_sensors = {"Xs2"}
-        vibration_sensors = {"Xs7"}
+        # The matched scenario's spike sensor should match the canonical
+        # UI map (terminal/layout.py SENSOR_DISPLAY_NAMES):
+        #   bearing thermal  → Xs2 (Bearing Temp)
+        #   pressure/hydraulic → Xs4 (Oil Pressure)
+        #   vibration        → Xs0 (Vibration X)
+        bearing_sensors   = {"Xs2"}
+        pressure_sensors  = {"Xs4"}
+        vibration_sensors = {"Xs0"}
         mapping = {
             "bearing_overheat":  bearing_sensors,
             "pressure_surge":    pressure_sensors,
@@ -82,7 +86,8 @@ class TestMatchScenario:
         result = match_scenario("completely unrelated random text about nothing")
         # Unknown input must always return the general_fault catch-all, never None
         assert isinstance(result, dict)
-        assert result["diagnostic_spike"].sensor_id == "Xs0"  # general_fault spike
+        # general_fault defaults to Xs2 (Bearing Temp) — the safe degradation default
+        assert result["diagnostic_spike"].sensor_id == "Xs2"
 
     def test_match_returns_dict(self):
         result = match_scenario("bearing temperature critical")

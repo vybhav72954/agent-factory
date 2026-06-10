@@ -30,11 +30,13 @@ class TestDiagnosticToCapacityPipeline:
     """End-to-end: fault text → tensor + spike → RUL → capacity report."""
 
     @pytest.mark.parametrize("fault_text, expected_sensor, machine_id, expected_status", [
-        ("bearing temperature surge on Machine 4", "Xs4",  4, "OFFLINE"),
-        ("pressure spike in hydraulic line",       "Xs2",  2, "OFFLINE"),
+        ("bearing temperature surge on Machine 4", "Xs2",  4, "OFFLINE"),
+        # "oil pressure" is unambiguous — Xs4 (Oil Pressure). "pressure spike
+        # in hydraulic line" would be ambiguous between Xs4 and Xs8 (Hydraulic PSI).
+        ("oil pressure surge on Machine 2",        "Xs4",  2, "OFFLINE"),
         # With multi-sensor ramp injection, vibration faults now produce
         # more dramatic RUL drops → OFFLINE rather than the old DEGRADED
-        ("vibration anomaly on CNC-Alpha",         "Xs7",  1, "OFFLINE"),
+        ("vibration anomaly on CNC-Alpha",         "Xs0",  1, "OFFLINE"),
     ])
     def test_fault_produces_expected_pipeline_output(
         self, base_window, dummy_oracle, fault_text, expected_sensor, machine_id, expected_status

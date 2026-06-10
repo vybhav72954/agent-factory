@@ -22,9 +22,11 @@ class SensorSpike(BaseModel):
     sensor_id: str = Field(
         description=(
             "The sensor column to spike. MUST be exactly one of these 18 values: "
-            "W0 (load/Mach), W1 (altitude), W2 (throttle angle), W3 (inlet temp), "
-            "Xs0, Xs1, Xs2 (pressure), Xs3, Xs4 (bearing temperature), Xs5, Xs6, "
-            "Xs7 (vibration), Xs8, Xs9, Xs10 (RPM/speed), Xs11, Xs12, Xs13. "
+            "W0 (Motor RPM), W1 (Feed Rate), W2 (Power kW), W3 (Coolant Flow), "
+            "Xs0 (Vibration X), Xs1 (Vibration Y), Xs2 (Bearing Temp), Xs3 (Motor Temp), "
+            "Xs4 (Oil Pressure), Xs5 (Oil Temp), Xs6 (Spindle Load), Xs7 (Torque), "
+            "Xs8 (Hydraulic PSI), Xs9 (Coolant Temp), Xs10 (Ambient Temp), "
+            "Xs11 (Current Amps), Xs12 (Acoustic dB), Xs13 (Cycle Time). "
             "No other values are valid. Do not invent sensor names."
         )
     )
@@ -66,7 +68,7 @@ class SensorSpike(BaseModel):
         description=(
             "One sentence describing the fault for the terminal log. "
             "Be specific: include the sensor name and physical meaning. "
-            "Example: 'Bearing temperature sensor Xs4 critical — thermal threshold exceeded.' "
+            "Example: 'Bearing temperature sensor Xs2 critical — thermal threshold exceeded.' "
             "Do NOT include brackets, markdown, or special characters."
         )
     )

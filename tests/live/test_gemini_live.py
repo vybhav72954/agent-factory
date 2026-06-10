@@ -26,11 +26,11 @@ class TestDiagnosticAgentLiveMappings:
     """Suite 5 from old test_agent1.py — live Gemini sensor mapping check."""
 
     @pytest.mark.parametrize("fault_text, expected_sensor, allowed_severities", [
-        ("bearing temperature surge on Machine 4",  "Xs4",  {"HIGH"}),
-        ("pressure spike in hydraulic line",        "Xs2",  {"HIGH"}),
-        ("vibration and shaking on CNC-Alpha",      "Xs7",  {"HIGH", "MEDIUM"}),
-        ("RPM drop on motor drive",                 "Xs10", {"HIGH", "MEDIUM"}),
-        ("coolant leak near pump",                  "Xs12", {"HIGH"}),
+        ("bearing temperature surge on Machine 4",  "Xs2",  {"HIGH"}),
+        ("pressure spike in hydraulic line",        "Xs4",  {"HIGH"}),
+        ("vibration and shaking on CNC-Alpha",      "Xs0",  {"HIGH", "MEDIUM"}),
+        ("RPM drop on motor drive",                 "W0",   {"HIGH", "MEDIUM"}),
+        ("coolant leak near pump",                  "W3",   {"HIGH"}),
     ])
     def test_live_sensor_mapping(self, base_window, fault_text,
                                   expected_sensor, allowed_severities):

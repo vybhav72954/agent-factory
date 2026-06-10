@@ -18,11 +18,11 @@ CACHED_SCENARIOS = {
     "bearing_overheat": {
         "trigger_keywords": ["bearing", "overheat", "temperature", "temp", "thermal", "hot"],
         "diagnostic_spike": SensorSpike(
-            sensor_id="Xs4",
+            sensor_id="Xs2",
             spike_value=0.95,
             affected_window_positions=[45, 46, 47, 48, 49],
             fault_severity="HIGH",
-            plain_english_summary="Bearing temperature sensor critical — exceeding thermal limits. [OFFLINE MODE]",
+            plain_english_summary="Bearing temperature sensor Xs2 critical — exceeding thermal limits. [OFFLINE MODE]",
         ),
         "floor_manager_response": (
             "[Floor Manager] {machine_name} (Machine {machine_id}) bearing temp critical — HALT production immediately. "
@@ -35,14 +35,14 @@ CACHED_SCENARIOS = {
     "pressure_surge": {
         "trigger_keywords": ["pressure", "surge", "psi", "hydraulic", "pneumatic", "compressed"],
         "diagnostic_spike": SensorSpike(
-            sensor_id="Xs2",
+            sensor_id="Xs4",
             spike_value=0.92,
             affected_window_positions=[40, 41, 42, 43, 44, 45, 46, 47, 48, 49],
             fault_severity="HIGH",
-            plain_english_summary="Pressure sensor surge detected — possible seal failure. [OFFLINE MODE]",
+            plain_english_summary="Oil pressure sensor Xs4 surge detected — possible seal failure. [OFFLINE MODE]",
         ),
         "floor_manager_response": (
-            "[Floor Manager] Pressure anomaly on {machine_name} (Machine {machine_id}) — reduce load to 50% pending inspection. "
+            "[Floor Manager] Oil pressure anomaly on {machine_name} (Machine {machine_id}) — reduce load to 50% pending inspection. "
             "Check upstream valve integrity before restoring full operation. "
             "Do not bypass pressure relief systems during diagnostics. "
             "Factory at {capacity_pct}%, \u03a3PD/T at {machine_req}."
@@ -52,11 +52,11 @@ CACHED_SCENARIOS = {
     "vibration_anomaly": {
         "trigger_keywords": ["vibration", "vibrating", "shaking", "oscillation", "imbalance", "wobble"],
         "diagnostic_spike": SensorSpike(
-            sensor_id="Xs7",
+            sensor_id="Xs0",
             spike_value=0.88,
             affected_window_positions=[44, 45, 46, 47, 48, 49],
             fault_severity="MEDIUM",
-            plain_english_summary="Vibration levels above normal — potential rotor imbalance. [OFFLINE MODE]",
+            plain_english_summary="Vibration sensor Xs0 above normal — potential rotor imbalance. [OFFLINE MODE]",
         ),
         "floor_manager_response": (
             "[Floor Manager] Vibration alert on {machine_name} (Machine {machine_id}) — possible rotor imbalance detected. "
@@ -69,11 +69,11 @@ CACHED_SCENARIOS = {
     "rpm_fluctuation": {
         "trigger_keywords": ["rpm", "speed", "rotation", "spin", "motor", "drive"],
         "diagnostic_spike": SensorSpike(
-            sensor_id="Xs10",
+            sensor_id="W0",
             spike_value=0.90,
             affected_window_positions=[46, 47, 48, 49],
             fault_severity="MEDIUM",
-            plain_english_summary="RPM fluctuation detected — possible drive belt issue. [OFFLINE MODE]",
+            plain_english_summary="Motor RPM sensor W0 fluctuation — possible drive belt issue. [OFFLINE MODE]",
         ),
         "floor_manager_response": (
             "[Floor Manager] RPM instability on {machine_name} (Machine {machine_id}) — reduce to DEGRADED mode at 50% load. "
@@ -84,13 +84,13 @@ CACHED_SCENARIOS = {
     },
 
     "coolant_leak": {
-        "trigger_keywords": ["coolant", "leak", "fluid", "lubrication", "oil", "drip"],
+        "trigger_keywords": ["coolant", "leak", "fluid", "drip", "flow"],
         "diagnostic_spike": SensorSpike(
-            sensor_id="Xs12",
+            sensor_id="W3",
             spike_value=0.87,
             affected_window_positions=[43, 44, 45, 46, 47, 48, 49],
             fault_severity="MEDIUM",
-            plain_english_summary="Coolant system anomaly — possible fluid leak detected. [OFFLINE MODE]",
+            plain_english_summary="Coolant flow sensor W3 anomaly — possible fluid leak detected. [OFFLINE MODE]",
         ),
         "floor_manager_response": (
             "[Floor Manager] Coolant anomaly on {machine_name} (Machine {machine_id}) — inspect fluid lines immediately. "
@@ -103,11 +103,11 @@ CACHED_SCENARIOS = {
     "general_fault": {
         "trigger_keywords": [],   # catch-all — matches when nothing else does
         "diagnostic_spike": SensorSpike(
-            sensor_id="Xs0",
+            sensor_id="Xs2",
             spike_value=0.93,
             affected_window_positions=[47, 48, 49],
             fault_severity="HIGH",
-            plain_english_summary="General sensor anomaly — unclassified fault pattern. [OFFLINE MODE]",
+            plain_english_summary="General sensor anomaly — defaulting to bearing thermal fault. [OFFLINE MODE]",
         ),
         "floor_manager_response": (
             "[Floor Manager] Anomaly detected on {machine_name} (Machine {machine_id}) — initiating precautionary slowdown. "
