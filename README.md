@@ -1,11 +1,11 @@
 # ForgeMind
 
-> **End-to-End AI System for Industrial Decision Intelligence**
+> **End-to-End AI System for Industrial Predictive Maintenance**
 > Combining Deep Learning, LLM-based Agents, and Real-Time Operations Analytics
 
 ---
 
-## 🚀 Overview
+## Overview
 
 ForgeMind is a **full-stack predictive maintenance system** that forecasts machine failures using deep learning and translates those predictions into **actionable operational decisions** through a modular, multi-agent pipeline.
 
@@ -15,18 +15,19 @@ Unlike traditional ML projects that stop at prediction, ForgeMind closes the loo
 
 ---
 
-## 🧠 Key Highlights
+## Key Highlights
 
-* 🔬 **CNN + LSTM Model** for Remaining Useful Life (RUL) prediction on multivariate time-series data
-* 🤖 **LLM-Assisted Agent Pipeline** for fault interpretation and decision orchestration
-* 🏭 **Factory State Engine** for centralized, real-time system memory
-* 📊 **Operations Analytics Layer** converting predictions into business insights
-* 🖥️ **Interactive Terminal Dashboard** (Textual UI) for live monitoring and simulation
-* 🧪 **Comprehensive Testing Suite** including integration and failure scenarios
+* **CNN + LSTM Model** for Remaining Useful Life (RUL) prediction on multivariate time-series data
+* **LLM-Assisted Agent Pipeline** for fault interpretation and decision orchestration (Gemini 2.5 Flash + Groq)
+* **Dual model variants** — turbofan (N-CMAPSS) and physics-informed factory simulator
+* **Factory State Engine** for centralized, real-time system memory
+* **Operations Analytics Layer** converting predictions into business insights
+* **Interactive Terminal Dashboard** (Textual UI) for live monitoring and simulation
+* **Comprehensive Testing Suite** including integration and failure scenarios (474 tests)
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```text
 User Input (Fault Description)
@@ -50,135 +51,137 @@ Terminal Dashboard (real-time visualization)
 
 ---
 
-## 🔬 Deep Learning Engine
+## Deep Learning Engine
 
-### 📌 Problem
+### Problem
 
-Predict **Remaining Useful Life (RUL)** of industrial machines from sensor data.
+Predict **Remaining Useful Life (RUL)** of industrial machines from multivariate sensor time-series.
 
-### ⚙️ Pipeline
+### Pipeline
 
 * Sliding window time-series construction (50 × 18 features)
 * Unit-wise data separation (prevents leakage)
 * MinMax scaling (train-only fitting)
 * CNN + LSTM hybrid architecture
 
-### 🧠 Model Design
+### Model Design
 
-* **CNN Layers** → capture local degradation patterns
-* **LSTM Layers** → model long-term temporal dependencies
-* **MLP Head** → regression output (RUL)
+* **CNN Layers** — capture local degradation patterns
+* **LSTM Layers** — model long-term temporal dependencies
+* **MLP Head** — regression output (RUL in shift-cycles)
 
-### 📊 Metrics
+### Model Variants
 
-* **RMSE** → statistical accuracy
-* **NASA Score** → asymmetric cost-sensitive evaluation
+| Variant | Weights | Output | When to use |
+|---|---|---|---|
+| **Turbofan** (default) | `best_model.pt` + `scaler.pkl` | Bimodal | N-CMAPSS DS02 baseline |
+| **Simulator** | `best_model_simulator.pt` + `scaler_simulator.pkl` | Continuous | Physics-informed factory data |
 
-> NASA scoring penalizes late failure predictions more heavily, aligning with real-world risk.
+Set `FORGEMIND_USE_SIMULATOR_MODEL=1` in `.env` to use the simulator variant.
 
 ---
 
-## 🤖 Agent Pipeline
+## Agent Pipeline
 
 ForgeMind uses a **modular multi-agent design**, where each component has a clearly defined responsibility:
 
-| Agent            | Role                                            |
-| ---------------- | ----------------------------------------------- |
-| Input Guard      | Filters invalid/noise inputs                    |
+| Agent | Role |
+|---|---|
+| Input Guard | Filters invalid/noise inputs |
 | Diagnostic Agent | Converts fault text → structured sensor anomaly |
-| DL Oracle        | Predicts RUL                                    |
-| Capacity Agent   | Converts RUL → system capacity impact           |
-| Floor Manager    | Generates human-readable decisions              |
+| DL Oracle | Predicts RUL |
+| Capacity Agent | Converts RUL → system capacity impact |
+| Floor Manager | Generates human-readable dispatch decisions |
 
-### 🔥 Design Principle
+### Design Principle
 
-> LLMs are used for **interpretation and communication**, not core logic.
+> LLMs are used for **interpretation and communication**, not core logic. Core routing is deterministic.
+
+Severity-driven injection: Gemini classifies fault severity (LOW / MEDIUM / HIGH), which directly controls injection magnitude via `SEVERITY_MULTIPLIERS`. A single "catastrophic bearing failure" takes a machine offline in one shot; repeated moderate faults degrade it progressively.
 
 ---
 
-## 🧠 Factory State (Core System Layer)
+## Factory State
 
 A centralized state object maintains:
 
-* Machine health & RUL
-* Sensor histories
-* Capacity metrics
-* Maintenance schedules
-* Logs & analytics
+* Machine health and RUL per machine
+* Per-machine sensor ring buffers (60 readings × 18 sensors)
+* Capacity metrics and breakeven risk flags
+* Maintenance schedule and shift health
+* Cumulative damage across fault cycles
 
 > Ensures synchronization across ML, agents, UI, and analytics layers.
 
 ---
 
-## 📊 Operations Analytics
+## Operations Analytics
 
 Transforms predictions into actionable insights:
 
-* 🚨 **RUL Cliff Detection** — sudden degradation alerts
-* ⚠️ **Sensor Saturation Detection** — data reliability warnings
-* 📅 **Predictive Maintenance Scheduling**
-* 🏭 **Shift Health Monitoring**
-* 📉 **Degradation Leaderboard**
-
-> Bridges the gap between ML output and business decision-making.
+* **RUL Cliff Detection** — flags sudden ≥40% RUL drops
+* **Sensor Saturation Detection** — warns on 5+ consecutive saturated readings
+* **Predictive Maintenance Scheduling** — ranked queue: OFFLINE → TODAY → THIS WEEK
+* **Shift Health Monitoring** — CRITICAL / AT RISK / CAUTION / NOMINAL
+* **Degradation Leaderboard** — slope-ranked: FAST / SLOW / STABLE / IMPROVING
 
 ---
 
-## 🖥️ Terminal Dashboard (Textual UI)
+## Terminal Dashboard
 
-A real-time interactive system with 4 panes:
+A real-time interactive 4-pane system:
 
 1. **Sensor Feed + RUL + Reliability**
 2. **Capacity Dashboard + Maintenance Queue**
 3. **Agent Communication Log**
-4. **Chaos Engine (fault injection interface)**
+4. **Chaos Engine** — fault injection interface
 
-Run:
-
-```bash
-python -m terminal.app
-```
+Keyboard shortcuts: `Ctrl+R` reset all machines · `Ctrl+Q` quit
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 ```bash
-git clone https://github.com/ConfusedNeuron/ForgeMind.git
-cd ForgeMind
+git clone https://github.com/vybhav72954/agent-factory.git
+cd agent-factory
 
+# Preferred
+uv sync
+
+# Alternative
 pip install -r requirements.txt
 ```
 
-Ensure model weights exist:
+### Required weights
+
+Place in `dl_engine/weights/`:
 
 ```text
 dl_engine/weights/
-  ├── best_model.pt
-  └── scaler.pkl
+  ├── best_model.pt              # turbofan variant
+  ├── scaler.pkl
+  ├── best_model_simulator.pt   # simulator variant
+  └── scaler_simulator.pkl
 ```
 
----
+### Environment variables
 
-## 📊 Dataset
+Create a `.env` file at the project root:
 
-This project uses the N-CMAPSS aircraft engine dataset:
+```env
+GEMINI_API_KEY_DIAGNOSTIC=<key>
+GEMINI_API_KEY_FLOOR_MANAGER=<key>
+GROQ_API_KEY=<key>
+FORGEMIND_USE_SIMULATOR_MODEL=1   # omit or set to 0 for turbofan
+```
 
-* Source: [N-CMAPSS Aircraft Engine Dataset (Kaggle)](https://www.kaggle.com/datasets/chaturvedivybhav/aircraft-ds02-006)
-* Contains multivariate time-series sensor data for multiple engines
-* Used for Remaining Useful Life (RUL) prediction
-
-### Data Characteristics
-
-* Multiple engine units (unit-wise separation)
-* Sensor readings + operational conditions
-* Time-series degradation patterns
-
-> ⚠️ Note: Ensure the dataset is downloaded and placed appropriately before training.
+Missing Gemini keys → deterministic fallback (no crash).
+Missing Groq key → keyword fallback tagged `[GROQ-UNAVAILABLE]`.
 
 ---
 
-## ▶️ Usage
+## Usage
 
 Run the dashboard:
 
@@ -186,102 +189,91 @@ Run the dashboard:
 python -m terminal.app
 ```
 
-Then enter fault descriptions like:
+Example fault descriptions:
 
 ```text
 bearing overheating on Machine 3
-pressure surge in hydraulic line
+catastrophic pressure rupture on Machine 1
+minor vibration anomaly on Machine 5
 ```
 
 ---
 
-## 🧪 Testing
+## Dataset
 
-Run full pipeline tests:
+Two training data sources are supported:
+
+| Source | Description |
+|---|---|
+| **N-CMAPSS DS02** | NASA aircraft engine turbofan dataset — multivariate sensor degradation |
+| **Physics-informed simulator** | Custom factory simulator (`research/simulator/`) — 6 components, 18 sensors, polarity-aware degradation |
+
+N-CMAPSS source: [Kaggle — N-CMAPSS DS02](https://www.kaggle.com/datasets/chaturvedivybhav/aircraft-ds02-006)
+
+To regenerate simulator training data:
 
 ```bash
-pytest
+python -m research.simulator.generate_training_data
+python -m research.simulator.train_simulator_model --epochs 25
 ```
 
-Integration test example:
+---
+
+## Testing
 
 ```bash
-pytest tests/integration/test_pipeline.py
+# Full suite (474 tests, ~9 skipped)
+python -m pytest tests/ -q
+
+# By category
+python -m pytest tests/unit/
+python -m pytest tests/integration/
+python -m pytest tests/terminal/
 ```
 
-Includes:
-
-* Input validation
-* Failure handling
-* Offline fallback mode
-* Schema validation
+No API keys required — all LLM calls are mocked in tests.
 
 ---
 
-## 💡 Design Strengths
+## Research
 
-* ✅ End-to-end system (not just ML model)
-* ✅ Strong separation of concerns
-* ✅ Hybrid AI (DL + Rules + LLMs)
-* ✅ Robustness (fallbacks, validation, retries)
-* ✅ Production-oriented testing
+ForgeMind is the artifact for the paper:
+
+> **"The Geometry of Apparent LLM Advantage in Automated Prognostic Health Management"**
+
+The `research/` directory contains the full evaluation pipeline:
+
+* `research/baselines.py` — 7-strategy comparison (keyword, regex, Groq Llama, Gemini, agentic)
+* `research/probe_cliff_3d.py` — RUL surface sweep across sensor space
+* `research/ablation.py` — component ablation studies
+* `research/domain3/` — Bayesian second-domain generalization demo
+* `research/figures.py` — publication-grade figure generation
+
+Reproduce all results:
+
+```bash
+python -m research.baselines --stability-runs 3
+python -m research.probe_cliff_3d --steps 15
+python -m research.ablation
+```
+
+See `REPRODUCE.md` for the full step-by-step.
 
 ---
 
-## ⚠️ Limitations & Future Work
+## Tech Stack
 
-* 🔄 Integrate `agent_loop` directly into UI (currently partially bypassed)
-* 🧠 Add stateful / memory-driven agents
-* 🧭 Introduce planning & multi-step reasoning
-* ⚡ Support batch inference & GPU acceleration
-* 📈 Add model explainability (SHAP/LIME)
-* 🔁 Online learning / model updates
-
----
-
-## 📦 Tech Stack
-
-* Python
+* Python 3.10+
 * PyTorch
-* NumPy / Pandas
+* NumPy / scikit-learn
 * Textual (terminal UI)
-* LLM APIs (Gemini / structured prompting)
+* Gemini 2.5 Flash (Google AI)
+* Groq (Llama 3 / Llama 4)
+* Pydantic
 * Pytest
 
 ---
 
-## 🎯 Project Positioning
-
-This project is best described as:
-
-> 🔥 **An End-to-End Predictive Maintenance Decision System**
-
-Not just:
-
-* ❌ “a deep learning model”
-* ❌ “an agent system”
-
-But a **complete AI-powered operations pipeline**.
-
----
-
-## 👥 Contributors
-
-This project was developed collaboratively by:
-
-* Vybhav Chaturvedi
-* Pranav Taneja
-* Sourav Sinha
-* Sneha Yadav
-* Siddharth Sharan
-* Rohit Ranjit Patil
-
-Contributions span across deep learning model development, agent system design, data pipeline engineering, operations analytics, and application integration.
-
----
-
-## 📜 License
+## License
 
 MIT License
-
----
