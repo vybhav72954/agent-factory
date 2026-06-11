@@ -60,7 +60,7 @@ plt.rcParams.update({
     "ytick.labelsize":   9,
     "legend.fontsize":   9,
     "figure.dpi":        100,   # display; savefig uses 300
-    "savefig.dpi":       300,
+    "savefig.dpi":       700,
     "savefig.bbox":      "tight",
     "axes.grid":         True,
     "grid.alpha":        0.25,
@@ -201,8 +201,8 @@ def fig1_strategy_comparison():
     ax.set_title("Strategy comparison across both predictor checkpoints (N=54 per cell, 95% bootstrap CI)")
     ax.legend(loc="lower left")
 
-    out = FIG_DIR / "fig1_strategy_comparison.png"
-    fig.savefig(out)
+    out = FIG_DIR / "fig1_strategy_comparison.tif"
+    fig.savefig(out, dpi=700, pil_kwargs={"compression": "tiff_lzw"})
     plt.close(fig)
     print(f"[fig] wrote {out.name}")
 
@@ -260,8 +260,8 @@ def fig2_probe_heatmap_compare():
         "RUL response surface: turbofan (bimodal, ~86% at modes) vs simulator (continuous)",
         fontsize=12, y=0.995
     )
-    out = FIG_DIR / "fig2_probe_heatmap_compare.png"
-    fig.savefig(out)
+    out = FIG_DIR / "fig2_probe_heatmap_compare.tif"
+    fig.savefig(out, dpi=700, pil_kwargs={"compression": "tiff_lzw"})
     plt.close(fig)
     print(f"[fig] wrote {out.name}")
 
@@ -314,8 +314,8 @@ def fig3_sequence_walkthrough():
     ax.set_title("3-hit MEDIUM sequence on Machine 3 (simulator checkpoint)")
     ax.legend(loc="upper right", fontsize=8)
 
-    out = FIG_DIR / "fig3_sequence_walkthrough.png"
-    fig.savefig(out)
+    out = FIG_DIR / "fig3_sequence_walkthrough.tif"
+    fig.savefig(out, dpi=700, pil_kwargs={"compression": "tiff_lzw"})
     plt.close(fig)
     print(f"[fig] wrote {out.name}")
 
@@ -364,8 +364,8 @@ def fig4_latency_vs_accuracy():
     ax.set_title("Accuracy vs latency on simulator checkpoint — regex baseline dominates")
     ax.legend(loc="lower left")
 
-    out = FIG_DIR / "fig4_latency_vs_accuracy.png"
-    fig.savefig(out)
+    out = FIG_DIR / "fig4_latency_vs_accuracy.tif"
+    fig.savefig(out, dpi=700, pil_kwargs={"compression": "tiff_lzw"})
     plt.close(fig)
     print(f"[fig] wrote {out.name}")
 
@@ -404,8 +404,8 @@ def fig5_per_prompt_match_matrix():
     ax.set_title("Per-prompt OFFLINE-match rate (simulator checkpoint)")
     cbar = fig.colorbar(im, ax=ax, label="Match rate", shrink=0.8)
     cbar.ax.tick_params(labelsize=9)
-    out = FIG_DIR / "fig5_per_prompt_match_matrix.png"
-    fig.savefig(out)
+    out = FIG_DIR / "fig5_per_prompt_match_matrix.tif"
+    fig.savefig(out, dpi=700, pil_kwargs={"compression": "tiff_lzw"})
     plt.close(fig)
     print(f"[fig] wrote {out.name}")
 
@@ -459,8 +459,8 @@ def fig6_sensor_convergence():
     ax.set_aspect("equal")
     ax.grid(False)
 
-    out = FIG_DIR / "fig6_sensor_convergence.png"
-    fig.savefig(out)
+    out = FIG_DIR / "fig6_sensor_convergence.tif"
+    fig.savefig(out, dpi=700, pil_kwargs={"compression": "tiff_lzw"})
     plt.close(fig)
     print(f"[fig] wrote {out.name}")
 
