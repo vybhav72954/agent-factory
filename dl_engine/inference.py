@@ -54,10 +54,17 @@ def _resolve_paths() -> tuple[str, str, str]:
 def load_model(
     weights_path: str | None = None,
     scaler_path : str | None = None,
+    variant     : str | None = None,
 ):
     """Load model weights and scaler. Called automatically on first predict_rul().
 
     With no arguments, honours FORGEMIND_USE_SIMULATOR_MODEL env var.
+
+    With explicit paths the variant label defaults to "custom". Pass
+    variant="simulator" for a checkpoint trained on simulator data (e.g. the
+    PRONOSTIA-calibrated simulator) so the polarity-aware helpers
+    (get_healthy_baseline, diagnostic_agent._is_dropping) treat W0/W3/Xs4/Xs8
+    as dropping sensors.
 
     **Thread safety:** holds `_load_lock` during the entire load so concurrent
     callers can't observe a half-loaded state. The lock is also re-checked
@@ -73,7 +80,7 @@ def load_model(
         weights_path = weights_path or w
         scaler_path  = scaler_path  or s
     else:
-        variant = "custom"
+        variant = variant or "custom"
 
     with _load_lock:
         # Double-check: another thread may have loaded the SAME variant

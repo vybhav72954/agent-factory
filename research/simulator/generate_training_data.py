@@ -60,6 +60,7 @@ def simulate_one_lifecycle(
     max_steps: int = 800,
     snapshot_every: int = 10,
     fault_probability: float = 0.4,   # MED-10: TESTED 0.75 → regression, see below
+    make_sim=None,
 ) -> list[tuple[np.ndarray, float]]:
     """
     Simulate one machine's life. Optionally inject 1-3 random faults at
@@ -86,9 +87,16 @@ def simulate_one_lifecycle(
     examples. The v3 weights and result snapshots are preserved under
     `dl_engine/weights/*_simulator_v3.pt.bak` and
     `research/results/*_simulator_v3.*` for the paper's appendix.
+
+    `make_sim(seed)` optionally builds the simulator (default: FactorySimulator
+    with noise_scale=0.5). research/pronostia/calibrated_checkpoint.py passes the
+    PRONOSTIA-calibrated simulator here.
     """
     rng = np.random.default_rng(seed)
-    sim = FactorySimulator(n_machines=1, seed=seed, noise_scale=0.5)
+    if make_sim is None:
+        sim = FactorySimulator(n_machines=1, seed=seed, noise_scale=0.5)
+    else:
+        sim = make_sim(seed)
 
     # Warm-up: run window_size ticks so we have a full window for the first snapshot
     for _ in range(window_size):

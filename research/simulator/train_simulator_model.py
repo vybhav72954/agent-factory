@@ -42,14 +42,17 @@ MODEL_DST_PATH   = WEIGHTS_DIR / "best_model_simulator.pt"
 SCALER_DST_PATH  = WEIGHTS_DIR / "scaler_simulator.pkl"
 
 
-def load_and_scale() -> tuple[torch.Tensor, torch.Tensor, MinMaxScaler]:
+def load_and_scale(
+    data_path: Path = DATA_PATH,
+    scaler_src_path: Path = SCALER_SRC_PATH,
+) -> tuple[torch.Tensor, torch.Tensor, MinMaxScaler]:
     """Load NPZ, apply scaler, return tensors + scaler for downstream save."""
-    print(f"[train] loading {DATA_PATH.relative_to(PROJECT_ROOT)}...")
-    data = np.load(DATA_PATH)
+    print(f"[train] loading {data_path.relative_to(PROJECT_ROOT)}...")
+    data = np.load(data_path)
     X = data["X"]   # (N, 50, 18) raw
     y = data["y"]   # (N,)
 
-    with open(SCALER_SRC_PATH, "rb") as f:
+    with open(scaler_src_path, "rb") as f:
         scaler: MinMaxScaler = pickle.load(f)
 
     # Apply scaler (reshape, transform, reshape back)
@@ -71,8 +74,14 @@ def train(
     val_frac: float = 0.15,
     patience: int = 5,
     device: str = "cpu",
+    data_path: Path = DATA_PATH,
+    scaler_src_path: Path = SCALER_SRC_PATH,
+    model_dst_path: Path = MODEL_DST_PATH,
+    scaler_dst_path: Path = SCALER_DST_PATH,
 ) -> None:
-    X, y, scaler = load_and_scale()
+    """Train and save the checkpoint. Path arguments default to the production
+    simulator files; research/pronostia/calibrated_checkpoint.py passes its own."""
+    X, y, scaler = load_and_scale(data_path, scaler_src_path)
 
     # Train/val split — both the split AND the DataLoader shuffle order
     # are seeded for bit-reproducibility (BUG_REPORT LOW-15). Without the
@@ -149,8 +158,8 @@ def train(
             best_epoch = epoch
             patience_left = patience
             # Save weights
-            WEIGHTS_DIR.mkdir(parents=True, exist_ok=True)
-            torch.save(model.state_dict(), MODEL_DST_PATH)
+            model_dst_path.parent.mkdir(parents=True, exist_ok=True)
+            torch.save(model.state_dict(), model_dst_path)
         else:
             patience_left -= 1
             if patience_left == 0:
@@ -158,15 +167,15 @@ def train(
                 break
 
     # Save scaler alongside
-    with open(SCALER_DST_PATH, "wb") as f:
+    with open(scaler_dst_path, "wb") as f:
         pickle.dump(scaler, f)
 
     print(f"\n[train] done. best epoch={best_epoch}  best_val_mse={best_val_loss:.2f}")
-    print(f"[train] wrote {MODEL_DST_PATH.relative_to(PROJECT_ROOT)}")
-    print(f"[train] wrote {SCALER_DST_PATH.relative_to(PROJECT_ROOT)}")
+    print(f"[train] wrote {model_dst_path.relative_to(PROJECT_ROOT)}")
+    print(f"[train] wrote {scaler_dst_path.relative_to(PROJECT_ROOT)}")
 
     # ── Quick check: is the trained model BIMODAL or properly continuous? ──
-    model.load_state_dict(torch.load(MODEL_DST_PATH, map_location=device))
+    model.load_state_dict(torch.load(model_dst_path, map_location=device))
     model.eval()
     with torch.no_grad():
         sample = X[:5000].to(device)
