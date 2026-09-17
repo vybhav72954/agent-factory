@@ -107,19 +107,33 @@ def strategy_keyword_only(user_text: str, base_window: np.ndarray) -> tuple[np.n
 # same vocabulary the LLM was instructed to use.
 import re as _re
 
-_HIGH_PATTERN = _re.compile(
-    r"\b(catastrophic|complete\s+failure|total\s+failure|destroyed|rupture|"
-    r"burst|explosion|fire|burning|smoke|shutdown|seized|shaft\s+lock|"
-    r"stopped\s+completely|halted|critical\s+failure|emergency|meltdown|"
-    r"outage|broken)\b",
-    _re.IGNORECASE,
-)
-_LOW_PATTERN = _re.compile(
-    r"\b(minor|slight|small|subtle|early|first\s+sign\s+of|wobble|drift|"
-    r"creep|trending\s+up|rising\s+slowly|intermittent|occasional|"
-    r"warning\s+sign)\b",
-    _re.IGNORECASE,
-)
+_HIGH_TERMS = [
+    "catastrophic", "complete failure", "total failure", "destroyed", "rupture",
+    "burst", "explosion", "fire", "burning", "smoke", "shutdown", "seized", "shaft lock",
+    "stopped completely", "halted", "critical failure", "emergency", "meltdown",
+    "outage", "broken",
+]
+_LOW_TERMS = [
+    "minor", "slight", "small", "subtle", "early", "first sign of", "wobble", "drift",
+    "creep", "trending up", "rising slowly", "intermittent", "occasional",
+    "warning sign",
+]
+# MEDIUM examples from prompts.py. The regex never matches these (MEDIUM is its
+# default); they are used only as embedding prototypes below.
+_MEDIUM_TERMS = [
+    "spike", "surge", "anomaly", "abnormal", "elevated", "high",
+    "fluctuation", "instability", "exceeded", "warning", "alert",
+]
+
+
+def _terms_pattern(terms: list[str]) -> "_re.Pattern":
+    """Case-insensitive whole-word alternation; spaces inside a term match any whitespace."""
+    alternation = "|".join(r"\s+".join(_re.escape(w) for w in t.split()) for t in terms)
+    return _re.compile(rf"\b({alternation})\b", _re.IGNORECASE)
+
+
+_HIGH_PATTERN = _terms_pattern(_HIGH_TERMS)
+_LOW_PATTERN = _terms_pattern(_LOW_TERMS)
 
 # Spike-value chosen at the centre of each severity band per the prompts.py
 # SPIKE VALUE RULES (HIGH 0.85–0.98, MEDIUM 0.65–0.84, LOW 0.45–0.64).
@@ -145,6 +159,26 @@ def _classify_severity_regex(user_text: str) -> FaultSeverity:
     return FaultSeverity.MEDIUM
 
 
+def _keyword_spike_with_severity(user_text: str, severity: FaultSeverity, tag: str) -> SensorSpike:
+    """Keyword sensor routing (FALLBACK_SPIKES, same as keyword_only) with the given
+    severity and the band-centre spike value. Shared by the non-LLM severity
+    classifiers so they differ only in how severity is decided."""
+    text_lower = user_text.lower()
+    spike = None
+    for kw in FALLBACK_KEYWORD_ORDER:
+        if kw in text_lower:
+            spike = FALLBACK_SPIKES[kw].model_copy()
+            break
+    if spike is None:
+        spike = FALLBACK_SPIKES["default"].model_copy()
+    spike.fault_severity = severity
+    spike.spike_value = _REGEX_SPIKE_VALUE[severity]
+    spike.plain_english_summary = (
+        f"[{tag}] {spike.sensor_id} fault, severity={severity.value}, value={spike.spike_value:.2f}."
+    )
+    return spike
+
+
 def strategy_keyword_regex_severity(user_text: str, base_window: np.ndarray) -> tuple[np.ndarray, dict]:
     """
     Strong non-LLM baseline: keyword routing for sensor selection (same as
@@ -158,29 +192,117 @@ def strategy_keyword_regex_severity(user_text: str, base_window: np.ndarray) -> 
     keyword/pattern matching. If they are close, the LLM is doing what a
     regex can do for ~10× lower latency and zero API cost.
     """
-    text_lower = user_text.lower()
-    # 1. Sensor selection from the FALLBACK_SPIKES table (same as keyword_only)
-    spike = None
-    for kw in FALLBACK_KEYWORD_ORDER:
-        if kw in text_lower:
-            spike = FALLBACK_SPIKES[kw].model_copy()
-            break
-    if spike is None:
-        spike = FALLBACK_SPIKES["default"].model_copy()
+    spike = _keyword_spike_with_severity(user_text, _classify_severity_regex(user_text), "BASELINE-REGEX")
+    injected = agentic_inject(base_window, spike)
+    return injected, spike.model_dump(mode="json")
 
-    # 2. Override severity using the regex classifier
-    new_severity = _classify_severity_regex(user_text)
-    spike.fault_severity = new_severity
 
-    # 3. Override spike_value to the centre of the corresponding band
-    spike.spike_value = _REGEX_SPIKE_VALUE[new_severity]
+# ── WordNet-expanded regex (stronger keyword baseline) ──────────────────────
+# Tests whether a better-engineered keyword system closes the gap on unfamiliar
+# wording. The expansion is purely mechanical, with no hand edits after seeing
+# any test prompt:
+#   - each single-word term in _HIGH_TERMS / _LOW_TERMS adds the lemma names of
+#     its most frequent WordNet sense for each part of speech (first synset per
+#     POS; WordNet orders senses by frequency);
+#   - multi-word terms are kept as they are;
+#   - input text is matched both as written and after WordNet lemmatisation
+#     (morphy), so inflections such as "bursting" match "burst".
+# Precedence is unchanged: HIGH, then LOW, else MEDIUM.
+_extended_patterns: dict[str, "_re.Pattern"] = {}
 
-    # 4. Update the summary so logs/UI reflect the overridden values
-    spike.plain_english_summary = (
-        f"[BASELINE-REGEX] {spike.sensor_id} fault, severity={new_severity.value} "
-        f"(regex-classified), value={spike.spike_value:.2f}."
-    )
 
+def _wordnet_expand(terms: list[str]) -> list[str]:
+    from nltk.corpus import wordnet as wn
+
+    expanded = set(terms)
+    for term in terms:
+        if " " in term:
+            continue
+        for pos in (wn.NOUN, wn.VERB, wn.ADJ, wn.ADV):
+            synsets = wn.synsets(term, pos=pos)
+            if synsets:
+                expanded.update(l.name().replace("_", " ").lower() for l in synsets[0].lemmas())
+    return sorted(expanded)
+
+
+def _lemmatised(text: str) -> str:
+    from nltk.corpus import wordnet as wn
+
+    out = []
+    for tok in _re.findall(r"[A-Za-z]+", text.lower()):
+        base = wn.morphy(tok, wn.VERB) or wn.morphy(tok, wn.NOUN) or wn.morphy(tok, wn.ADJ) or tok
+        out.append(base)
+    return " ".join(out)
+
+
+def _classify_severity_regex_extended(user_text: str) -> FaultSeverity:
+    if not _extended_patterns:
+        _extended_patterns["HIGH"] = _terms_pattern(_wordnet_expand(_HIGH_TERMS))
+        _extended_patterns["LOW"] = _terms_pattern(_wordnet_expand(_LOW_TERMS))
+    variants = (user_text, _lemmatised(user_text))
+    if any(_extended_patterns["HIGH"].search(v) for v in variants):
+        return FaultSeverity.HIGH
+    if any(_extended_patterns["LOW"].search(v) for v in variants):
+        return FaultSeverity.LOW
+    return FaultSeverity.MEDIUM
+
+
+def strategy_keyword_regex_extended(user_text: str, base_window: np.ndarray) -> tuple[np.ndarray, dict]:
+    """Keyword routing + WordNet-expanded regex severity (see the block comment above)."""
+    spike = _keyword_spike_with_severity(user_text, _classify_severity_regex_extended(user_text),
+                                         "BASELINE-REGEX-EXTENDED")
+    injected = agentic_inject(base_window, spike)
+    return injected, spike.model_dump(mode="json")
+
+
+# ── Embedding severity classifier (non-generative NLP baseline) ─────────────
+# Local sentence embeddings (all-MiniLM-L6-v2, CPU) with no API calls and no
+# generative model. Prototypes are built only from vocabulary the production
+# prompt already gives the LLM: every severity term in _HIGH_TERMS / _LOW_TERMS /
+# _MEDIUM_TERMS combined with every sensor name in the prompt's SENSOR MAP
+# ("<term> <sensor name> fault"). A description gets the class whose top-5
+# prototype cosine similarities have the highest mean. No test prompt is used.
+EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+_EMBEDDING_TOP_K = 5
+_embedding_state: dict[str, object] = {}
+
+
+def _sensor_names_from_prompt() -> list[str]:
+    from agents.prompts import DIAGNOSTIC_SYSTEM_PROMPT
+
+    names = []
+    for line in DIAGNOSTIC_SYSTEM_PROMPT.splitlines():
+        m = _re.match(r"^\s+(W\d|Xs\d+)\s+—\s+(.+?)\s*(\(|$)", line)
+        if m:
+            names.append(m.group(2).strip().lower())
+    return names
+
+
+def _embedding_classifier():
+    if not _embedding_state:
+        from sentence_transformers import SentenceTransformer
+
+        model = SentenceTransformer(EMBEDDING_MODEL, device="cpu")
+        sensors = _sensor_names_from_prompt()
+        prototypes = {}
+        for label, terms in (("HIGH", _HIGH_TERMS), ("MEDIUM", _MEDIUM_TERMS), ("LOW", _LOW_TERMS)):
+            phrases = [f"{t} {s} fault" for t in terms for s in sensors]
+            prototypes[label] = model.encode(phrases, normalize_embeddings=True, batch_size=256)
+        _embedding_state.update(model=model, prototypes=prototypes)
+    return _embedding_state["model"], _embedding_state["prototypes"]
+
+
+def _classify_severity_embedding(user_text: str) -> FaultSeverity:
+    model, prototypes = _embedding_classifier()
+    v = model.encode([user_text], normalize_embeddings=True)[0]
+    scores = {label: float(np.sort(p @ v)[-_EMBEDDING_TOP_K:].mean()) for label, p in prototypes.items()}
+    return FaultSeverity(max(scores, key=scores.get))
+
+
+def strategy_embedding_severity(user_text: str, base_window: np.ndarray) -> tuple[np.ndarray, dict]:
+    """Keyword routing + embedding nearest-prototype severity (see the block comment above)."""
+    spike = _keyword_spike_with_severity(user_text, _classify_severity_embedding(user_text),
+                                         "BASELINE-EMBEDDING")
     injected = agentic_inject(base_window, spike)
     return injected, spike.model_dump(mode="json")
 
@@ -244,13 +366,51 @@ def _get_gemini_client_for(model_hint: str = ""):
     return _gemini_clients["shared"]
 
 
-def _gemini_diagnose(model_id: str, user_text: str) -> SensorSpike:
+RATE_LIMIT_MAX_ATTEMPTS = 5
+
+
+def _is_rate_limit_error(e: Exception) -> bool:
+    """True for HTTP 429 / quota errors from the Gemini or Groq SDKs."""
+    text = f"{type(e).__name__} {e}"
+    return any(tag in text for tag in ("RateLimit", "ResourceExhausted", "RESOURCE_EXHAUSTED", "429"))
+
+
+def _with_rate_limit_retry(call: Callable):
+    """Run `call()`, retrying with exponential backoff (4, 8, 16, 32 s) on rate-limit errors.
+
+    Other errors, and a rate-limit error on the final attempt, propagate so the
+    caller's keyword fallback still applies. Added 2026-09-16: without it a 429
+    silently became a fallback row.
+    """
+    for attempt in range(1, RATE_LIMIT_MAX_ATTEMPTS + 1):
+        try:
+            return call()
+        except Exception as e:
+            if attempt == RATE_LIMIT_MAX_ATTEMPTS or not _is_rate_limit_error(e):
+                raise
+            time.sleep(2 ** (attempt + 1))
+
+
+def _gemini_diagnose(model_id: str, user_text: str, system_prompt: str | None = None,
+                     usage_out: dict | None = None, thinking_budget: int | None = None) -> SensorSpike:
     """
     Call a specific Gemini model with the production DIAGNOSTIC_SYSTEM_PROMPT
     and structured-output mode (response_schema=SensorSpike). On any failure
     (no client, network error, validation error), fall back to keyword lookup
     so the comparison is robust. Identical retry/fallback semantics to
     `_groq_diagnose` for a fair within-vendor comparison.
+
+    Args:
+        model_id:      Gemini model name.
+        user_text:     fault description.
+        system_prompt: optional replacement for DIAGNOSTIC_SYSTEM_PROMPT. Used by
+                       the paraphrase experiment's meaning-based severity prompt
+                       (`research/paraphrase/prompts_semantic.py`).
+        usage_out:     optional dict filled with input_tokens / output_tokens
+                       (output includes thinking tokens) for cost analysis.
+        thinking_budget: optional Gemini thinking budget. None keeps the model
+                       default (thinking on for 2.5 Flash); 0 disables thinking,
+                       matching the production agent in agents/diagnostic_agent.py.
     """
     from agents.prompts import DIAGNOSTIC_SYSTEM_PROMPT
     from google.genai import types as gtypes
@@ -262,16 +422,20 @@ def _gemini_diagnose(model_id: str, user_text: str) -> SensorSpike:
         spike.plain_english_summary = f"[GEMINI-UNAVAILABLE] {spike.plain_english_summary}"
         return spike
 
+    prompt = system_prompt if system_prompt is not None else DIAGNOSTIC_SYSTEM_PROMPT
+    config_kwargs = dict(response_mime_type="application/json", response_schema=SensorSpike, temperature=0.0)
+    if thinking_budget is not None:
+        config_kwargs["thinking_config"] = gtypes.ThinkingConfig(thinking_budget=thinking_budget)
     try:
-        response = client.models.generate_content(
+        response = _with_rate_limit_retry(lambda: client.models.generate_content(
             model=model_id,
-            contents=f"{DIAGNOSTIC_SYSTEM_PROMPT}\n\nFault description: {user_text}",
-            config=gtypes.GenerateContentConfig(
-                response_mime_type="application/json",
-                response_schema=SensorSpike,
-                temperature=0.0,
-            ),
-        )
+            contents=f"{prompt}\n\nFault description: {user_text}",
+            config=gtypes.GenerateContentConfig(**config_kwargs),
+        ))
+        um = getattr(response, "usage_metadata", None)
+        if usage_out is not None and um is not None:
+            usage_out["input_tokens"] = int(um.prompt_token_count or 0)
+            usage_out["output_tokens"] = int(um.candidates_token_count or 0) + int(getattr(um, "thoughts_token_count", 0) or 0)
         spike = SensorSpike.model_validate_json(response.text)
         if not spike.plain_english_summary.startswith("["):
             spike.plain_english_summary = f"[{model_id}] {spike.plain_english_summary}"
@@ -433,6 +597,11 @@ def strategy_agentic_continuous(user_text: str, base_window: np.ndarray) -> tupl
 
 GROQ_LLAMA_3_3_MODEL = "llama-3.3-70b-versatile"
 GROQ_LLAMA_4_MODEL   = "meta-llama/llama-4-scout-17b-16e-instruct"
+# Groq retired both Llama models by 2026-09 (NotFoundError). Their May 2026 rows
+# stay in the result CSVs as historical results; these two open-weight models
+# replace them in new runs.
+GROQ_GPT_OSS_120B_MODEL = "openai/gpt-oss-120b"
+GROQ_QWEN3_8_MODEL      = "qwen/qwen3.8-27b"
 
 _groq_client = None  # Lazy init so missing GROQ_API_KEY doesn't break import
 
@@ -454,7 +623,8 @@ def _get_groq_client():
     return _groq_client
 
 
-def _groq_diagnose(model_id: str, user_text: str) -> SensorSpike:
+def _groq_diagnose(model_id: str, user_text: str, system_prompt: str | None = None,
+                   usage_out: dict | None = None) -> SensorSpike:
     """
     Send DIAGNOSTIC_SYSTEM_PROMPT + user_text to a Groq-hosted Llama model and
     parse the JSON response into a SensorSpike. On any failure (no client,
@@ -465,9 +635,20 @@ def _groq_diagnose(model_id: str, user_text: str) -> SensorSpike:
     counted as part of the strategy's outputs — if Llama fails often enough
     that fallback dominates, the strategy's status-match collapses toward
     keyword_only's, which is the honest signal.
+
+    Args:
+        model_id:      Groq model name.
+        user_text:     fault description.
+        system_prompt: optional replacement for DIAGNOSTIC_SYSTEM_PROMPT (see
+                       `_gemini_diagnose`).
+        usage_out:     optional dict filled with input_tokens / output_tokens
+                       (output includes reasoning tokens) for cost analysis.
     """
     from agents.prompts import DIAGNOSTIC_SYSTEM_PROMPT
     from pydantic import ValidationError
+
+    if system_prompt is None:
+        system_prompt = DIAGNOSTIC_SYSTEM_PROMPT
 
     client = _get_groq_client()
     if client is None:
@@ -486,16 +667,23 @@ def _groq_diagnose(model_id: str, user_text: str) -> SensorSpike:
         "Do NOT include any text outside the JSON object."
     )
     try:
-        resp = client.chat.completions.create(
+        resp = _with_rate_limit_retry(lambda: client.chat.completions.create(
             model=model_id,
             messages=[
-                {"role": "system", "content": DIAGNOSTIC_SYSTEM_PROMPT + schema_hint},
+                {"role": "system", "content": system_prompt + schema_hint},
                 {"role": "user",   "content": f"Fault description: {user_text}"},
             ],
             response_format={"type": "json_object"},
             temperature=0.0,  # deterministic for stability comparison
-            max_tokens=400,
-        )
+            # 2000, not 400: reasoning models (gpt-oss-120b) spend tokens reasoning
+            # before the JSON, and a 400 cap truncated it (json_validate_failed,
+            # 14/54 fallback rows on 2026-09-16). Non-reasoning models stop well
+            # under 400 either way.
+            max_tokens=2000,
+        ))
+        if usage_out is not None and getattr(resp, "usage", None) is not None:
+            usage_out["input_tokens"] = int(resp.usage.prompt_tokens or 0)
+            usage_out["output_tokens"] = int(resp.usage.completion_tokens or 0)
         raw = resp.choices[0].message.content
         spike = SensorSpike.model_validate_json(raw)
         # Tag so post-hoc audit can tell apart Llama-emitted vs fallback rows
@@ -512,6 +700,106 @@ def _groq_diagnose(model_id: str, user_text: str) -> SensorSpike:
             f"[GROQ-FALLBACK {err_class}] {spike.plain_english_summary}"
         )
         return spike
+
+
+# ── Local small open models via Ollama (no API; quantised, run on the local GPU) ──
+# Added 2026-09-17 (research/AEI/analysis_plan_additions.md, section B): tests
+# whether the advantage on unfamiliar wording needs a hosted model.
+OLLAMA_MODELS = {                     # strategy suffix -> (Ollama tag, request options)
+    "llama3_2_3b": ("llama3.2:3b", {}),
+    "gemma3_4b":   ("gemma3:4b", {}),
+    "qwen3_4b":    ("qwen3:4b", {"think": False}),
+}
+OLLAMA_OPTIONS = {"temperature": 0.0, "seed": 0, "num_ctx": 4096, "num_predict": 512}
+
+
+def _ollama_url() -> str:
+    """Base URL from OLLAMA_HOST (host:port or URL), default the standard local port."""
+    import os
+    host = os.environ.get("OLLAMA_HOST", "127.0.0.1:11434")
+    return host if host.startswith("http") else f"http://{host}"
+
+
+def _ollama_diagnose(model_tag: str, user_text: str, system_prompt: str | None = None,
+                     usage_out: dict | None = None, think: bool | None = None) -> SensorSpike:
+    """
+    Same request as `_groq_diagnose` (system prompt + JSON field hint, temperature 0)
+    sent to a local Ollama model, with the SensorSpike JSON schema as a decoding
+    constraint. Any failure falls back to the keyword lookup, tagged
+    [OLLAMA-FALLBACK <error>]; an unreachable server is tagged [OLLAMA-UNAVAILABLE].
+    """
+    import requests
+    from agents.prompts import DIAGNOSTIC_SYSTEM_PROMPT
+
+    if system_prompt is None:
+        system_prompt = DIAGNOSTIC_SYSTEM_PROMPT
+    schema_hint = (
+        "\n\nReturn ONLY a JSON object with these fields:\n"
+        '  "sensor_id": str (one of W0-W3, Xs0-Xs13)\n'
+        '  "spike_value": float in [0, 1]\n'
+        '  "affected_window_positions": list of ints in [0, 49], length 1-10\n'
+        '  "fault_severity": str (one of "LOW", "MEDIUM", "HIGH")\n'
+        '  "plain_english_summary": str (one sentence, no markdown)\n'
+        "Do NOT include any text outside the JSON object."
+    )
+    payload = {
+        "model": model_tag,
+        "messages": [
+            {"role": "system", "content": system_prompt + schema_hint},
+            {"role": "user",   "content": f"Fault description: {user_text}"},
+        ],
+        "format": SensorSpike.model_json_schema(),
+        "options": OLLAMA_OPTIONS,
+        "stream": False,
+        "keep_alive": "30m",
+    }
+    if think is not None:
+        payload["think"] = think
+    try:
+        resp = requests.post(f"{_ollama_url()}/api/chat", json=payload, timeout=300)
+    except requests.exceptions.ConnectionError:
+        spike = _get_fallback_spike(user_text)
+        spike.plain_english_summary = f"[OLLAMA-UNAVAILABLE] {spike.plain_english_summary}"
+        return spike
+    try:
+        resp.raise_for_status()
+        body = resp.json()
+        if usage_out is not None:
+            usage_out["input_tokens"] = int(body.get("prompt_eval_count") or 0)
+            usage_out["output_tokens"] = int(body.get("eval_count") or 0)
+        spike = SensorSpike.model_validate_json(body["message"]["content"])
+        if not spike.plain_english_summary.startswith("["):
+            spike.plain_english_summary = f"[{model_tag}] {spike.plain_english_summary}"
+        return spike
+    except Exception as e:
+        spike = _get_fallback_spike(user_text)
+        spike.plain_english_summary = f"[OLLAMA-FALLBACK {type(e).__name__}] {spike.plain_english_summary}"
+        return spike
+
+
+def _ollama_strategy(key: str) -> Callable:
+    model_tag, request = OLLAMA_MODELS[key]
+
+    def strategy(user_text: str, base_window: np.ndarray) -> tuple[np.ndarray, dict]:
+        spike = _ollama_diagnose(model_tag, user_text, **request)
+        injected = agentic_inject(base_window, spike)
+        return injected, spike.model_dump(mode="json")
+
+    strategy.__doc__ = f"Diagnostic agent backed by {model_tag}, local via Ollama."
+    return strategy
+
+
+def _trained_strategy(arm: str) -> Callable:
+    """Keyword routing + a trained severity classifier, regime R1 (research/trained_baselines.py)."""
+    def strategy(user_text: str, base_window: np.ndarray) -> tuple[np.ndarray, dict]:
+        from research.trained_baselines import classify_prompt_knowledge
+        severity = FaultSeverity(classify_prompt_knowledge(arm, user_text))
+        spike = _keyword_spike_with_severity(user_text, severity, f"BASELINE-{arm.upper()}")
+        injected = agentic_inject(base_window, spike)
+        return injected, spike.model_dump(mode="json")
+
+    strategy.__doc__ = f"Keyword routing + {arm} severity trained on production-prompt vocabulary (R1)."
+    return strategy
 
 
 def _get_fallback_spike(user_text: str) -> SensorSpike:
@@ -537,15 +825,40 @@ def strategy_groq_llama4(user_text: str, base_window: np.ndarray) -> tuple[np.nd
     return injected, spike.model_dump(mode="json")
 
 
+def strategy_groq_gpt_oss_120b(user_text: str, base_window: np.ndarray) -> tuple[np.ndarray, dict]:
+    """Diagnostic agent backed by OpenAI gpt-oss-120b (open-weight) via Groq."""
+    spike = _groq_diagnose(GROQ_GPT_OSS_120B_MODEL, user_text)
+    injected = agentic_inject(base_window, spike)
+    return injected, spike.model_dump(mode="json")
+
+
+def strategy_groq_qwen3_8(user_text: str, base_window: np.ndarray) -> tuple[np.ndarray, dict]:
+    """Diagnostic agent backed by Qwen 3.8 27B (open-weight) via Groq."""
+    spike = _groq_diagnose(GROQ_QWEN3_8_MODEL, user_text)
+    injected = agentic_inject(base_window, spike)
+    return injected, spike.model_dump(mode="json")
+
+
 STRATEGIES: dict[str, Callable] = {
     "keyword_only":            strategy_keyword_only,
     "keyword_regex_severity":  strategy_keyword_regex_severity,
+    "keyword_regex_extended":  strategy_keyword_regex_extended,  # WordNet-expanded word lists
+    "embedding_severity":      strategy_embedding_severity,      # MiniLM nearest-prototype, local CPU
     "fixed_midrange":          strategy_fixed_midrange,
     "agentic":                 strategy_agentic,                # Gemini 2.5 Flash (production)
     "agentic_continuous":      strategy_agentic_continuous,     # Gemini 2.5 Flash, continuous multiplier
     "gemini_3_5_flash":        strategy_gemini_3_5_flash,       # Gemini 3.5 Flash (newer)
-    "groq_llama3":             strategy_groq_llama3,            # Llama 3.3 70B via Groq
-    "groq_llama4":             strategy_groq_llama4,            # Llama 4 Scout via Groq
+    "groq_llama3":             strategy_groq_llama3,            # Llama 3.3 70B via Groq (retired on Groq; historical)
+    "groq_llama4":             strategy_groq_llama4,            # Llama 4 Scout via Groq (retired on Groq; historical)
+    "groq_gpt_oss_120b":       strategy_groq_gpt_oss_120b,      # OpenAI gpt-oss-120b via Groq
+    "groq_qwen3_8":            strategy_groq_qwen3_8,           # Qwen 3.8 27B via Groq
+    # Trained severity classifiers, regime R1 (research/trained_baselines.py), local CPU
+    "tfidf_logreg":            _trained_strategy("tfidf_logreg"),
+    "minilm_logreg":           _trained_strategy("minilm_logreg"),
+    "bge_m3_logreg":           _trained_strategy("bge_m3_logreg"),
+    "minilm_finetuned":        _trained_strategy("minilm_finetuned"),
+    # Small open models, local via Ollama (quantised, GTX 1650)
+    **{f"ollama_{key}": _ollama_strategy(key) for key in OLLAMA_MODELS},
 }
 
 
@@ -644,6 +957,10 @@ def run_pipeline(
         "sensor_id":        spike_dict.get("sensor_id"),
         "severity":         spike_dict.get("fault_severity"),
         "spike_value":      spike_dict.get("spike_value"),
+        # Summary carries the [..-FALLBACK ..] audit tags; continuous multiplier
+        # lets agentic_continuous rows be replayed (research/multiplier_sweep.py).
+        "spike_summary":    spike_dict.get("plain_english_summary"),
+        "severity_multiplier": spike_dict.get("severity_multiplier"),
         "rul":              rul,
         "status":           capacity_report["status"],
         "capacity_pct":     capacity_report["capacity_pct"],
@@ -811,10 +1128,14 @@ def write_summary(df: pd.DataFrame, stability_runs: int) -> None:
     md.append("- `keyword_only` — pure FALLBACK_SPIKES lookup (weak deterministic baseline)\n")
     md.append("- `fixed_midrange` — constant Xs2 spike (trivial deterministic baseline)\n")
     md.append("- `keyword_regex_severity` — **strong deterministic baseline**: keyword routing + regex severity classifier using the same word lists as `prompts.py`\n")
+    md.append("- `keyword_regex_extended` — same routing, word lists mechanically expanded with WordNet synonyms and lemmatised matching\n")
+    md.append("- `embedding_severity` — same routing, severity from a local MiniLM sentence-embedding classifier with prototypes built only from the `prompts.py` word lists\n")
     md.append("- `agentic` — Gemini 2.5 Flash via Google's `response_schema` structured-output mode (production pipeline)\n")
     md.append("- `gemini_3_5_flash` — Gemini 3.5 Flash via the same `response_schema` mode (newer Google model)\n")
     md.append("- `groq_llama3` — Llama 3.3 70B Versatile via Groq (Meta family, OpenAI-compatible JSON mode)\n")
     md.append("- `groq_llama4` — Llama 4 Scout 17B via Groq (Meta family, OpenAI-compatible JSON mode)\n")
+    md.append("- `groq_gpt_oss_120b` — OpenAI gpt-oss-120b via Groq (open-weight; replaces the retired Llama models)\n")
+    md.append("- `groq_qwen3_8` — Qwen 3.8 27B via Groq (open-weight; replaces the retired Llama models)\n")
 
     md.append("\n## Headline comparison\n")
     md.append("**Status-match rate** is the primary strategy-quality metric: what fraction of "
