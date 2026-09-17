@@ -1,0 +1,12 @@
+{
+  "k_vib": 41.92,
+  "k_temp": -3.6799999999999997,
+  "slopes": {
+    "Vibration_X": 0.9469955081126615,
+    "Vibration_Y": 0.9469955081126615,
+    "Acoustic_dB": 15.0,
+    "Bearing_Temp": 28.066631666666666
+  },
+  "lifetime_lognormal_sigma": 0.6302266290457145,
+  "source": "PRONOSTIA / FEMTO-ST IEEE PHM 2012, research/pronostia/calibrate.py"
+}

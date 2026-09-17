@@ -1,0 +1,124 @@
+{
+  "trained": "2026-09-16 22:33",
+  "architecture": "CNNLSTM_RUL default config (dl_engine/model.py)",
+  "window": 50,
+  "label": "piecewise-linear RUL: 100 before first predicting time (FPT), linear to 0 at failure",
+  "fpt_rule": "5 consecutive points of trailing 11-pt median log10 h_rms > early-life mean + 3.0 SD",
+  "fpt_life_fraction": {
+    "Bearing1_4": 0.764,
+    "Bearing1_5": 0.99,
+    "Bearing1_6": 0.669,
+    "Bearing1_7": 0.979,
+    "Bearing2_4": 1.0,
+    "Bearing2_5": 1.0,
+    "Bearing2_6": 0.989,
+    "Bearing2_7": 1.0,
+    "Bearing3_3": 0.769
+  },
+  "channels": {
+    "0": {
+      "sensor_id": "W0",
+      "feature": "speed_rpm",
+      "transform": null
+    },
+    "2": {
+      "sensor_id": "W2",
+      "feature": "load_n",
+      "transform": null
+    },
+    "4": {
+      "sensor_id": "Xs0",
+      "feature": "h_rms",
+      "transform": "log10"
+    },
+    "5": {
+      "sensor_id": "Xs1",
+      "feature": "v_rms",
+      "transform": "log10"
+    },
+    "6": {
+      "sensor_id": "Xs2",
+      "feature": "temp_c",
+      "transform": null
+    },
+    "16": {
+      "sensor_id": "Xs12",
+      "feature": "hf_db",
+      "transform": null
+    }
+  },
+  "constant_columns": [
+    1,
+    3,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    17
+  ],
+  "train_bearings": [
+    "Bearing1_4",
+    "Bearing1_5",
+    "Bearing1_6",
+    "Bearing2_4",
+    "Bearing2_5",
+    "Bearing2_7",
+    "Bearing3_3"
+  ],
+  "val_bearings": [
+    "Bearing1_7",
+    "Bearing2_6"
+  ],
+  "best_epoch": 14,
+  "val_rmse": 5.006363062349808,
+  "val_per_bearing": {
+    "Bearing1_7": {
+      "n": 2259,
+      "rmse": 4.762604236602783,
+      "mae": 2.3158645629882812,
+      "status_accuracy": 0.9933598937583001
+    },
+    "Bearing2_6": {
+      "n": 701,
+      "rmse": 5.7216620445251465,
+      "mae": 2.702575206756592,
+      "status_accuracy": 0.9957203994293866
+    }
+  },
+  "val_prediction_quantiles": {
+    "0.0": 57.1816291809082,
+    "0.1": 97.6100082397461,
+    "0.25": 98.09091186523438,
+    "0.5": 98.1759262084961,
+    "0.75": 98.23612213134766,
+    "0.9": 98.33045959472656,
+    "1.0": 98.40196228027344
+  },
+  "healthy_raw": [
+    1800.0,
+    0.0,
+    4000.0,
+    0.0,
+    -0.3736664652824402,
+    -0.29780280590057373,
+    84.2636489868164,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    29.204654693603516,
+    0.0
+  ],
+  "seed": 20260916,
+  "device": "cuda"
+}
