@@ -1,0 +1,3 @@
+model,n_train,agreement,kappa
+tfidf_logreg_fmucd_trained,6000,0.6866666666666666,0.5951219512195122
+bge_m3_logreg_fmucd_trained,6000,0.6133333333333333,0.537467700258398

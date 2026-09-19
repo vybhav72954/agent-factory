@@ -1,0 +1,294 @@
+{
+  "2": [
+    {
+      "text": "GROUNDS: CLEAN UP ITEMS OR DEBRIS OUTSIDE",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "Cylinder Rack",
+      "band": "LOW"
+    },
+    {
+      "text": "WATER LAB CUSTOMER REQUEST TESTING",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "ELECTRICAL",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "EHS: ODOR CALLS",
+      "band": "HIGH"
+    },
+    {
+      "text": "FACULTY HOUSING TV/INTERNET ISSUES",
+      "band": "LOW"
+    },
+    {
+      "text": "HVAC: BROKEN THERMOSTAT",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "GENERAL INVESTIGATION: PROVIDE INVESTIGATION SERVICES",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "ELECTRIC: LOSS OF POWER",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "LOCK: ENGRAVING",
+      "band": "LOW"
+    },
+    {
+      "text": "ELEVATOR: ELEVATORATOR ENTRAPMENT",
+      "band": "HIGH"
+    },
+    {
+      "text": "CUSTODIAL: LIGHT BURNT OUT",
+      "band": "LOW"
+    },
+    {
+      "text": "PAINT: PAINT/REFINISH FURNISHINGS OR EQUIPMENT",
+      "band": "LOW"
+    },
+    {
+      "text": "CARPENTRY: REPAIR/INSTALL WALKWAYS, POSTS, GATES",
+      "band": "LOW"
+    },
+    {
+      "text": "EHS: FIRE EXTINGUISHER REPAIR/REPLACE",
+      "band": "HIGH"
+    }
+  ],
+  "3": [
+    {
+      "text": "CI/SB: APT 306: CABINETS FALLING DOWN",
+      "band": "HIGH"
+    },
+    {
+      "text": "SB: LOW STEAM PRESSURE ALARM",
+      "band": "HIGH"
+    },
+    {
+      "text": "SB: LOW TEMP ON PREHEAT COIL",
+      "band": "HIGH"
+    },
+    {
+      "text": "STANDBY: LATHROP 5TH FLR: PLUGGED TOILET. **NO COMPLETION NEEDED**",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "SB: AIR HANDLER #1 IN ALARM",
+      "band": "HIGH"
+    },
+    {
+      "text": "CALLIN: E4377: WIPERS NOT WORKING. NO COMPLETION NEEDED.",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "STANDBY: SAC 400-600: NO HEAT",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "SB: SOUTH ENTRY: DOOR NOT SECURED",
+      "band": "HIGH"
+    },
+    {
+      "text": "STANDBY: AHRB: CHAMBER #65 IN RM 0W12 IN ALARM. **NO COMPLETION NEEDED** **BILLABLE**",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "SB: FA/THEATRE: SEWER SMELL",
+      "band": "HIGH"
+    },
+    {
+      "text": "SB: ANIMAL QTRS: BOILER ALARM GOING OFF",
+      "band": "HIGH"
+    },
+    {
+      "text": "STANDBY: WRRB: ALARM WOULD NOT CLEAR. NO COMPLETION NEEDED.",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "SB: SF14 IN ALARM",
+      "band": "HIGH"
+    },
+    {
+      "text": "SB: 902 OUTCHAMBER 1 IS OUT OF BOUNDS",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "STANDBY: CTC: NO STAIRWELL DOOR AT UDC UNLOCKED RESPOND BEFORE BUILDING LOCKS DOWN. **NO COMPLETION NEEDED**",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "STANDBY: JUNEAU CENTER (SFOS): MULTIPLE ALARMS FOR DUCT STATIC AND PUMPS. NO COMPLETION NEEDED.",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "SB: SF1 FAN FAILURE",
+      "band": "HIGH"
+    },
+    {
+      "text": "SB: 3RD FLR WOMENS RM: FLOODING",
+      "band": "HIGH"
+    },
+    {
+      "text": "SB: LIBRARY: SHUT DOWN PUMPS/CLOSE BYPAS",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "STANDBY: JUNEAU: COMM LINK DOWN. **NO COMPLETION NEEDED**",
+      "band": "MEDIUM"
+    }
+  ],
+  "7": [
+    {
+      "text": "front door will not lock",
+      "band": "HIGH"
+    },
+    {
+      "text": "Door card for Education Building has expired. Can this be extended to December 31, 2021?",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "Drain cooling tower sump ( Mechanical)",
+      "band": "HIGH"
+    },
+    {
+      "text": "the plugs in hallway are tripped",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "First 8 cubicles have no power",
+      "band": "HIGH"
+    },
+    {
+      "text": "MUA tripped out for the second time. Check soft start.",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "LI 412.1 - There is a hole in the wall where the towel bar is supposed to be installed. Hole needs to be repaired and towel bar re-installed.",
+      "band": "LOW"
+    },
+    {
+      "text": "The first 2 urinals in this washroom are overflowing",
+      "band": "HIGH"
+    },
+    {
+      "text": "supply and install winter tires",
+      "band": "LOW"
+    },
+    {
+      "text": "Please order on key to LB 316 for Geology grad student Nicole Barber (200295657) and send to Science.",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "Elevator not running. Would not respond to floor call buttons. Display on main floor showed elevator on level three. Checked third floor and doors were closed. IR18-000907 Campus Security report.",
+      "band": "HIGH"
+    },
+    {
+      "text": "Light bulb is burnt out in main office area and CL 411.2 (First office on north side of CL 411). Can we please have them replaced?",
+      "band": "LOW"
+    },
+    {
+      "text": "WA 534 - bathtub is dripping.",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "Campus Power outage. System reset and verification.",
+      "band": "HIGH"
+    },
+    {
+      "text": "Hooks installed throughout FLC strength machine area need to be replaced. A number of them have broken off. They are on the supporting beams throughout space. Thanks.",
+      "band": "LOW"
+    },
+    {
+      "text": "Door stopper rubber is worn out on left hand side, needs replacement.",
+      "band": "LOW"
+    },
+    {
+      "text": "Good morning Can you please replace the Classroom building master for key set #2 in the lockbox. Thanks",
+      "band": "LOW"
+    },
+    {
+      "text": "Please turn down temperature.",
+      "band": "MEDIUM"
+    }
+  ],
+  "9": [
+    {
+      "text": "We have some aerators that are stuck or have objects stuck in them: Labs 114A, 024, 022 and 016 HARH.",
+      "band": "LOW"
+    },
+    {
+      "text": "The exhaust fan in J2 of AHG4 is making a loud noise; like bad bearings. (General comments)",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "After hours - Sensor trouble alarm on the fire panel. (General Comments)",
+      "band": "HIGH"
+    },
+    {
+      "text": "There is a natural gas odor in JH room 044. (General comments)",
+      "band": "HIGH"
+    },
+    {
+      "text": "Repair of incinterator which is shutting off during the cycle. NVDC Room 260F",
+      "band": "LOW"
+    },
+    {
+      "text": "After hours - Supervisory fire alarm at ANDN. (General Comments)",
+      "band": "HIGH"
+    },
+    {
+      "text": "There is a sconce out in the SE fire stair. The adjacent door number is S2-206C. Thanks, Deb",
+      "band": "LOW"
+    },
+    {
+      "text": "Ice machine in catering kitchen, room 116 of Ross Van Brunt is pooling water on the floor under the unit.",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "After hours - JH: Per Operator leak from basement ceiling in front of room 42.(General Comments)",
+      "band": "HIGH"
+    },
+    {
+      "text": "WHIT room 150 the drain pipe is leaking under the sink. (General comments)",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "Lights out in PLSH room 406. We will need an electrician to figure out why the lights wont turn on.",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "Emergency Light inside room is on and making a making a beeping noise. (General Comments)",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "There is a strong odor in the mail area by the elevator, where the handicap ramp is at ADMS. (General comments)",
+      "band": "LOW"
+    },
+    {
+      "text": "After Hours - Fire Alarm Scott Engineering Trucks Rolling. Smoke detector in SEC link room 216H. (General Comments)",
+      "band": "HIGH"
+    },
+    {
+      "text": "FYH command power box in the basement near room 42 is sounding an alarm. This is on the north side of the building.",
+      "band": "MEDIUM"
+    },
+    {
+      "text": "After hours - Water Leak in Room 311. (General comments)",
+      "band": "HIGH"
+    },
+    {
+      "text": "Sandwich table is not cold enough for the food in FOOD 143 (Dairy Store).",
+      "band": "LOW"
+    },
+    {
+      "text": "At LLN an electrical plate is off and on the floor. It is on the 2nd floor, in the open area, turn to the north and then to the right. It is laying on the brick.",
+      "band": "LOW"
+    }
+  ]
+}

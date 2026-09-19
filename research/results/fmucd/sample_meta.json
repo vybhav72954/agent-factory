@@ -1,0 +1,19 @@
+{
+  "unplanned_with_description": 1068569,
+  "mapped": 90555,
+  "input_guard_pass_rate": 0.1991276020098283,
+  "pool_after_dedup": 7755,
+  "sampled": 300,
+  "by_band": {
+    "HIGH": 100,
+    "LOW": 100,
+    "MEDIUM": 100
+  },
+  "by_university": {
+    "7": 125,
+    "9": 97,
+    "3": 65,
+    "2": 13
+  },
+  "seed": 20260918
+}

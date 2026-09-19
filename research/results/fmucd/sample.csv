@@ -1,0 +1,301 @@
+bank_id,text,design_severity,style,anchor,university,WOPriority,SystemDescription,ComponentDescription
+UAF07-0014117,SB: RM 219B: HIGH TEMP,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Thermostat
+98281,Call out from heating plant to respond to a low pressure alarm.,HIGH,workorder,7,7,P1 - Emergency (1 day),Fire Protection,Fire Sprinkler System
+FM-540252,"After hours - Dairy store room 127E cooler temperatures too high. Cory Maul went out on this, compressor bad. General Comments).",HIGH,workorder,9,9,1-EMERGENCY,Equipment,"Freezer/Cooler, Commercial/Reach-In"
+UAF09-0012006,SB/CI: DILLINGHAM: BOILER FAILURE,HIGH,workorder,3,3,1-EMERGENCY,HVAC,"Boiler, Electric/Gas/Oil"
+104395,assuming ceiling leak - water coming into kitchen area CARPENTERS added to open walls,HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Sink
+FM-508389,After hours - Heat pump in alarm in room 206 LEV. (General Comments)(Task Comments),HIGH,workorder,9,9,1-EMERGENCY,HVAC,HVAC Control Panel
+UAF09-0003963,SB: PREHEAT TEMP OUT OF RANGE,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Thermostat
+83184,Unit tripped on flame failure,HIGH,workorder,7,7,P1 - Emergency (1 day),HVAC,"Air Handler, Exhaust/Multizone/Single Zone"
+FM-673601,After Hours - PSTG was cold no heat to the building. (General Comments),HIGH,workorder,9,9,1-EMERGENCY,HVAC,HVAC Control Panel
+UAF07-0025925,SB: Q-COM FAILURE - 3 TIMES,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Unplanned Maintenance
+122261,In mens 330.1 Second stall toilet seat is broke right off,HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Toilet & Wash Basin
+FM-592595,"After hours - AVH: UNL PD paged, flow alarm on the fire panel. Was called in a second time at 12:30 a.m. (General Comments)",HIGH,workorder,9,9,1-EMERGENCY,Fire Protection,Fire Alarm Control Panel
+UAF07-0019611,SB: WR CAFE: COOLER HIGH TEMP ALARM,HIGH,workorder,3,3,1-EMERGENCY,Equipment,"Freezer/Cooler, Commercial/Reach-In"
+113097,ceiling leak looks like tile is ready to break out,HIGH,workorder,7,7,P1 - Emergency (1 day),Interior Finishes,Vinyl Tile Dropped Ceiling
+FM-644350,"Sensor troubles at Selleck 7,8 and 9000 buildings. (General comments)",HIGH,workorder,9,9,1-EMERGENCY,Electrical,Security Control Panel
+UAF09-0013481,SB: KITCHEN: LEAK UNDER DISH SINK,HIGH,workorder,3,3,1-EMERGENCY,Plumbing,Sink
+126604,CB 232 is sitting at 23. They have tried to lower the temperature about an hour ago and the instructor has advised the room is still very warm.,HIGH,workorder,7,7,P1 - Emergency (1 day),HVAC,Thermostat
+FM-511636,After hours -- could not see Family Resource Center on jEMS - believed the steam heat to be off. (General Comments),HIGH,workorder,9,9,1-EMERGENCY,HVAC,HVAC Control Panel
+UAF07-0025244,SB: BSMT MECH RM: LOUD BANGING NOISE,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Unplanned Maintenance
+77260,Roof leak - bladder is not catching all of the water R/C Darcy,HIGH,workorder,7,7,P1 - Emergency (1 day),Interior Finishes,Plaster Ceiling
+FM-525186,There is a major water leak in ANSC room D165. (General comments),HIGH,workorder,9,9,1-EMERGENCY,Plumbing,Pipe & Fittings
+UAF09-0009619,SB: ZONE #4 TEMP OUT OF RANGE,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Thermostat
+104292,assuming ceiling leak - water coming into kitchen area,HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Sink
+FM-634099,After Hours - LLS Leak in Room 3A stacks area. (General Comments),HIGH,workorder,9,9,1-EMERGENCY,Interior Finishes,Unplanned Maintenance
+UAF08-0017618,SB: WATER SOFTENER SMALL LEAK FROM AREA,HIGH,workorder,3,3,1-EMERGENCY,Plumbing,Water Softener
+120400,Leak from ceiling SW corner of work control,HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Pipe & Fittings
+FM-611139,After hours - Glycol leak in RM015. Single ceiling pad damaged and small amount leaked on floor. (General comments),HIGH,workorder,9,9,1-EMERGENCY,HVAC,Pipe & Fittings
+UAF08-0015197,SB: 726B: HEATING PUMP GOING DRY,HIGH,workorder,3,3,1-EMERGENCY,HVAC,"Circulation Pump, Hot Water"
+116962,Water from toilet leak in WA 224 (See FAMIS request 116961) leaked through ceiling into the bathroom light fixture.,HIGH,workorder,7,7,P1 - Emergency (1 day),Electrical,Fluorescent Lighting Fixture
+FM-574137,After Hours - Control Air Compressor running continuously. (General Comments),HIGH,workorder,9,9,1-EMERGENCY,Plumbing,Air Compressor
+UAF08-0016260,SB: RM 301: CEILING LEAK,HIGH,workorder,3,3,1-EMERGENCY,Interior Finishes,Plaster Ceiling
+101579,Water running down elevator shaft Kone called Monday Aug 20/18 @ 5:30pm Ref #13010804,HIGH,workorder,7,7,P1 - Emergency (1 day),Conveying,Elevator Geared
+FM-670199,After Hours - HEWP Trouble Alarm on Fire Panel Fire Pump Rm 15 (General Comments),HIGH,workorder,9,9,1-EMERGENCY,Fire Protection,Fire Alarm Control Panel
+UAF07-0013841,SB: BRISTOL BAY: SF2 TEMP IN ALARM,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Supply Fan
+93820,ceiling leak - pretty decent - tiles fallen down ELECTRICIANS added - ceiling tile with sensor in it,HIGH,workorder,7,7,P1 - Emergency (1 day),Interior Finishes,Vinyl Tile Dropped Ceiling
+FM-721791,After Hours - JH Basement women's restroom toilet flush valve continuously running. (General Comments),HIGH,workorder,9,9,1-EMERGENCY,Plumbing,Toilet & Wash Basin
+UAF09-0024570,SB: BRISTOL BAY: GLYCOL TEMP IN ALARM,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Chilled Water Cooling System
+88271,There is an active leak in the ceiling above Gina Swan's desk in LY 610. Can this be looked into and the ceiling tile replaced. Thank you.,HIGH,workorder,7,7,P1 - Emergency (1 day),Interior Finishes,Vinyl Tile Dropped Ceiling
+FM-511917,There is a steam leak in a pipe above the cage washer in small animal room D178.,HIGH,workorder,9,9,1-EMERGENCY,HVAC,Pipe & Fittings
+UAF07-0014855,SB: SERVER RM HIGH TEMP ALARM,HIGH,workorder,3,3,1-EMERGENCY,HVAC,HVAC Control Panel
+87354,There is a ceiling leak near the washrooms main floor corridor around a access hatch in the ceiling. There is some concern about the hatch falling as the drywall around the hatch is swelling,HIGH,workorder,7,7,P1 - Emergency (1 day),Interior Finishes,Plaster Ceiling
+FM-526390,After Hours - MOLR CHW Building Return Pressure Low Alarm (General Comments),HIGH,workorder,9,9,1-EMERGENCY,HVAC,HVAC Control Panel
+UAF09-0024939,SB: SF4 GROWTH CHAMBER TEMP ALARM,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Supply Fan
+116300,"Convection oven, temperature of top oven. Over heating Main Kitchen, Bakers Section",HIGH,workorder,7,7,P1 - Emergency (1 day),Equipment,Microwave Oven
+FM-513654,There is a leak in the ceiling of PLSH room 372.,HIGH,workorder,9,9,1-EMERGENCY,Plumbing,Pipe & Fittings
+UAF08-0000759,SB: ALARM TEMP BELOW 35 DEGREES,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Thermostat
+120491,Please have a look at SP 005. I believe it’s been running for quite a while. The pump is very hot. I shut off the switch at the motor starter. Thank you.,HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Sump Pump
+FM-577090,After hours - HHW2 had differential pressure error. Diff PR was too high. Calling for 5 psi and could only get down to 7.2 psi at minimum pump speed. (General comments),HIGH,workorder,9,9,1-EMERGENCY,HVAC,Pressure Reducer Valve
+UAF08-0013306,SB: AH #6 DISCHARGE A TEMP LOW,HIGH,workorder,3,3,1-EMERGENCY,HVAC,"Air Handler, Exhaust/Multizone/Single Zone"
+121981,"the first stall of toilet bow was plug again, please check thanks",HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Toilet & Wash Basin
+FM-620119,"After Hours - Event going on at TEMP and AHUs were not running, reported but Brooke Hay (General comments)",HIGH,workorder,9,9,1-EMERGENCY,HVAC,HVAC Control Panel
+UAF09-0010062,SB: AIR HANDLER #11 SUPPLY AIR TEMP LOW,HIGH,workorder,3,3,1-EMERGENCY,HVAC,"Air Handler, Exhaust/Multizone/Single Zone"
+110016,WA 545 - thermostat is not working properly. Temperature is set at 72 degrees but the room is super hot.,HIGH,workorder,7,7,P1 - Emergency (1 day),HVAC,Thermostat
+FM-713963,"After Hours - DEV Low system battery, ground fault alarm. (General Comments)",HIGH,workorder,9,9,1-EMERGENCY,Fire Protection,Fire Alarm Control Panel
+UAF07-0022548,SB: 1ST FLR: LEAK IN CEILING,HIGH,workorder,3,3,1-EMERGENCY,Plumbing,Pipe & Fittings
+128052,Second sink from the right has a tap that has been leaking for some time. The leak has now turned into a stream and can't be turned off.,HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Sink
+FM-624708,(After Hours) Custodians notified Jason Ross of a leak in the pottery room at Richards. Bucket was used to contain the leak until morning. No damage. (General Comments),HIGH,workorder,9,9,1-EMERGENCY,Plumbing,Pipe & Fittings
+UAF08-0012504,SB: DOMESTIC HW TEMP LOW,HIGH,workorder,3,3,1-EMERGENCY,Plumbing,"Water Heater, Condensing/Electric/Gas/Oil"
+84255,Leak on the heating system.,HIGH,workorder,7,7,P1 - Emergency (1 day),HVAC,Pipe & Fittings
+FM-515595,After hour - The domestic water booster pump at OLDH is leaking. (General comments),HIGH,workorder,9,9,1-EMERGENCY,Plumbing,Booster Pump
+UAF07-0008369,SB: SF-2 LOW TEMP DETECTOR ON,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Supply Fan
+130432,Low coolant level alarm on generator. Called in at 10:00 am,HIGH,workorder,7,7,P1 - Emergency (1 day),Electrical,"Generator, Diesel/Propane"
+FM-649225,After hours - At WHIT the 1st floor women's restroom handicap stall gurgles and is not flushing correctly. The reporter is afraid is will overflow. (General comments),HIGH,workorder,9,9,1-EMERGENCY,Plumbing,Toilet & Wash Basin
+UAF07-0017664,SB: PALMER AG FARM: AIR TEMP ALARM,HIGH,workorder,3,3,1-EMERGENCY,HVAC,HVAC Control Panel
+106232,"Hi, There is a liquid leak from the ceiling that is started to pour water down onto the electronics in the composition lab. The keyboard that got wet smells like sewage. Please resolve quickly.",HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Pipe & Fittings
+FM-502667,Fire alarm support for sprinkler leak in Resident Director's Office.,HIGH,workorder,9,9,1-EMERGENCY,Fire Protection,Fire Alarm Control Panel
+UAF07-0024712,SB: BLDG STATIC PRESSURE ALARM FAILED,HIGH,workorder,3,3,1-EMERGENCY,HVAC,HVAC Control Panel
+104451,assuming ceiling leak - water coming into kitchen area PAINTERS added to patch and paint,HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Sink
+FM-606411,"After hours - ARCH Hall, fire alarm trucks rolling, operator states panel reads main module water flow east building. (General Comments)",HIGH,workorder,9,9,1-EMERGENCY,Fire Protection,Fire Alarm Control Panel
+UAF09-0024934,SB: BOILER #4 EMERGENCY SHUTDOWN ALARM,HIGH,workorder,3,3,1-EMERGENCY,HVAC,"Boiler, Electric/Gas/Oil"
+91874,Fire Pump Controller has a Loss of Power trouble,HIGH,workorder,7,7,P1 - Emergency (1 day),Fire Protection,Fire Suppression System Water Pump
+FM-611128,After hours - UNL PD Fire Alarm. (Water flow switch on fire sprinkler system needs replaced),HIGH,workorder,9,9,1-EMERGENCY,Fire Protection,Fire Alarm Control Panel
+UAF07-0025913,SB: SUPERCOMPUTING: LOW COOLANT ALARM,HIGH,workorder,3,3,1-EMERGENCY,HVAC,HVAC Control Panel
+107712,KI232- the water temperature is very intermittent. It goes for hot to cold to barely warm.,HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,"Water Heater, Condensing/Electric/Gas/Oil"
+FM-729665,After Hours - MOLR Room 1ST1 temp alarm (General Comments),HIGH,workorder,9,9,1-EMERGENCY,HVAC,HVAC Control Panel
+UAF07-0021162,SB: BUILDING STATIC PRESSURE FAILURE,HIGH,workorder,3,3,1-EMERGENCY,HVAC,HVAC Control Panel
+116865,Please deliver a back flow preventer to College Ave Campus for use on hydrant #24 in order for Superior Forklift to fill a street sweeper. Thanks,HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Backflow Preventor
+FM-591732,After hours - Low return pressure on HHW system (General comments),HIGH,workorder,9,9,1-EMERGENCY,HVAC,Pipe & Fittings
+UAF09-0012602,SB: BRISTOL BAY: LOW BOILER HEADER TEMP,HIGH,workorder,3,3,1-EMERGENCY,HVAC,"Boiler, Electric/Gas/Oil"
+126825,CW 516 - appears there was a roof leak (not currently leaking) near the fan coil. Might be the roof drain.,HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Roof Drain
+FM-671647,After Hours - TEMP Events in Building. They needed AHU systems turned on. (General Comments),HIGH,workorder,9,9,1-EMERGENCY,HVAC,HVAC Control Panel
+UAF08-0020521,SB: PUMP FAILURE ON HX2,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Heat Exchanger
+84109,there is no power in the caretaker room can use our machine,HIGH,workorder,7,7,P1 - Emergency (1 day),Electrical,Circuit Breaker
+FM-728112,After Hours - SEH Found the HHW pump 1 operating loudly during walk-thru. (General Comments) Pump 2 is making noise and it will need to be rebuilt also.,HIGH,workorder,9,9,1-EMERGENCY,HVAC,"Circulation Pump, Hot Water"
+UAF09-0024568,SB: STEAM PRESSURE IN ALARM,HIGH,workorder,3,3,1-EMERGENCY,HVAC,"Steam Boiler, Gas Fired"
+114935,"This might require the locksmiths and plumbers, but the gas shutoff valve in this space is not working. Could someone check into this please? Thank you.",HIGH,workorder,7,7,P1 - Emergency (1 day),Interior Construction,Door Hardware
+FM-577145,"After hours - trouble on fire panel at Abel Sandoz Welcome Center per UNL PD. Reset panel, ground fault on outdoor strobe circuit. (General Comments)",HIGH,workorder,9,9,1-EMERGENCY,Fire Protection,Fire Alarm Control Panel
+UAF08-0015619,SB: BUS7 TEMP ALARM,HIGH,workorder,3,3,1-EMERGENCY,HVAC,HVAC Control Panel
+110744,Report the heat in adhum 348 appears to be out of control. The thermoastat has been turned down but the room appears to be getting hotter.,HIGH,workorder,7,7,P1 - Emergency (1 day),HVAC,Thermostat
+FM-618969,After Hours - MANT Water Leak from ceiling in Room 305B. (General Comments),HIGH,workorder,9,9,1-EMERGENCY,Plumbing,Pipe & Fittings
+UAF08-0013326,SB: NO HEAT ON UPPER TWO FLOORS,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Thermostat
+81389,There is a leak dripping form a 2 or 3 inch copper pipe elbow which is located about 20 yards from the parkade overhead door and very close to the wall.,HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Pipe & Fittings
+FM-604929,UHC: HHW_E low pressure alarm on jEMS. (General Comments),HIGH,workorder,9,9,1-EMERGENCY,HVAC,HVAC Control Panel
+UAF09-0013946,CI: LOW TEMP ALARM,HIGH,workorder,3,3,1-EMERGENCY,Electrical,Alarm Siren
+106825,around 10:15pm. CKHS 225.6.2 water star to leak from cling. We put a bucket to hold the water and security have been notified. thanks,HIGH,workorder,7,7,P1 - Emergency (1 day),Interior Finishes,Plaster Ceiling
+FM-587858,After hours - HAH: RM 213 custodial reported of a water valve in a hood spraying water and needs attention. (General Comments),HIGH,workorder,9,9,1-EMERGENCY,Plumbing,"Valve, Non-Drain"
+UAF07-0015630,SB: PREHEAT COIL PUMP IN ALARM,HIGH,workorder,3,3,1-EMERGENCY,HVAC,Secondary Coil
+87328,There is a leak in this room from the ceiling. carpenters added to replace ceiling tile,HIGH,workorder,7,7,P1 - Emergency (1 day),Plumbing,Pipe & Fittings
+FM-608150,(After Hours) David Coffin requested a temperature adjustment for the weight room. Set point was locked by their staff causing high temp.,HIGH,workorder,9,9,1-EMERGENCY,HVAC,HVAC Control Panel
+UAF07-0020650,ART GALLERY: RESPOND TO CEILING LEAK,HIGH,workorder,3,3,1-EMERGENCY,Plumbing,Pipe & Fittings
+C_PLANT18088561,WATER LAB CHEMICAL IMBALANCE,LOW,workorder,2,2,4-ROUTINE,Plumbing,Reverse Osmosis/Deionized Water System
+123225,add a 1-1/2'' ball valve on condensate line in mech room lacite basement - tony .k. has all the parts ready - gord.m. and Darren.b. know about this to be done on steam shut down.,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,"Valve, Non-Drain"
+FM-570157,Noise coming from ceiling in 2nd floor in area of E218; sounds like air and believe this is urgent. (General Comments),LOW,workorder,9,9,4-ROUTINE,Plumbing,Unplanned Maintenance
+C_PLANT16014729,"UTILITY PLANT: SYSTEM LEAK (CONDENSATE, STEAM, CHILLED WATER, ETC)",LOW,workorder,2,2,4-ROUTINE,HVAC,HVAC Control Panel
+81283,From Inspection 2590 Walls - Minor Wear - Patch and paint around white boards,LOW,workorder,7,7,P3 - Routine Type I (21 days),Interior Finishes,Concrete Interior Wall Finish
+FM-574071,There is a leak in the hallway by BEAD room N315.,LOW,workorder,9,9,4-ROUTINE,Interior Finishes,Unplanned Maintenance
+PRSNGTS17077289,PLUMBING: WATER TEMPERATURE ISSUE,LOW,workorder,2,2,4-ROUTINE,Plumbing,"Water Heater, Condensing/Electric/Gas/Oil"
+123515,Scheduled Maintenance Order new main filter bags 9 X 20X 24X 22,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,Air Filters
+FM-673342,TEMP basement next to room 11 the baseboard is loose.,LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+CHURCH18088408,HVAC: COLD ROOM TEMPERATURE ALARM,LOW,workorder,2,2,4-ROUTINE,HVAC,Thermostat
+94054,Sump pump is not working in crawl space ELECTRICAL: disconnect and install sump pump,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Sump Pump
+FM-682475,"SEC flood sensor reporting - room 029D, the sensor is sending false closure every 20 -30 minutes.",LOW,workorder,9,9,4-ROUTINE,Plumbing,Unplanned Maintenance
+KRK_ANX16007375,HVAC: LEAK,LOW,workorder,2,2,4-ROUTINE,HVAC,Pipe & Fittings
+113719,Glycol leak on pump discharge line. For tony.,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Pipe & Fittings
+FM-544010,In MOLR room 310D & E repair the ceiling its starting to crack and paint is peeling from ceiling.,LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+123967,replace shower valve,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,"Valve, Non-Drain"
+FM-595389,"OLDH 718 has a leak they can't find the source, it may be a condensation leak.(General comments)",LOW,workorder,9,9,4-ROUTINE,Interior Finishes,Unplanned Maintenance
+95781,"Apex Valve Division to test,service and recetify steam pressure safety valves. This must be completed by code every 5 years.",LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Pressure Reducer Valve
+FM-549742,Need refrigeration to come and work on the compressor on the sandwich make table in the Diary Store Kitchen at Food. (General Comments),LOW,workorder,9,9,4-ROUTINE,HVAC,Unplanned Maintenance
+86701,Stall door lock not working. It is two down from the wheel chair accessible stall.,LOW,workorder,7,7,P3 - Routine Type I (21 days),Interior Construction,Door Hardware
+FM-663294,TEMP buckets placed in the attic last night are full and the persistent leaks on Howell stage have reappeared.,LOW,workorder,9,9,4-ROUTINE,Interior Finishes,Unplanned Maintenance
+102515,replace pump head on FSJP 01 Pump head has a constant drip coming from it,LOW,workorder,7,7,P3 - Routine Type I (21 days),Fire Protection,Fire Suppression System Water Pump
+FM-563588,At MANT room 210 investigate the source of the leak to the first floor.,LOW,workorder,9,9,4-ROUTINE,Interior Finishes,Unplanned Maintenance
+111159,High temperature of 29C in the room.,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,Fan Coil Unit
+FM-565564,"There's a noise coming from the penthouse by rooms D129 and D130, sounds like something is rubbing.",LOW,workorder,9,9,4-ROUTINE,Plumbing,Unplanned Maintenance
+122930,Make WO for myself to finish changing belts on compressor and reset compressor and clear trouble code.,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Air Compressor
+FM-636584,The handwash station outside room 259 needs the sensor batteries replaced.,LOW,workorder,9,9,4-ROUTINE,Plumbing,Unplanned Maintenance
+104701,Check why heat wheel is in alarm. Make WO for controls ELECTRICAL,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,Fan 
+FM-733212,Building occupants are reporting equipment failure and suspect electrical irregularities.,LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+85766,"oil leak from power operator unit, thanks",LOW,workorder,7,7,P3 - Routine Type I (21 days),Interior Construction,Door Hardware
+FM-523911,The requester dropped her billfold down the north elevator shaft at 19PG. (General comments),LOW,workorder,9,9,4-ROUTINE,Conveying,Unplanned Maintenance
+113325,Scheduled Maintenance Motor making little noise .,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,"Circulation Pump, Chiller & Condenser Water"
+FM-722628,Tie in electrical domestic loop pump #2.,LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+94696,stained ceiling tile in Northeast corner behind main desk Looks like a dripping valve Talked to Blair about it Please make this a P-3 WO,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Pipe & Fittings
+FM-530470,At NU the HVAC compressor unit is not running. This is located on the 2nd floor of NU. Please authorize the use to start. (General Comments),LOW,workorder,9,9,4-ROUTINE,HVAC,Unplanned Maintenance
+119870,lose toilet seat 1st stall mens 3rd floor cl bldg,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Toilet & Wash Basin
+FM-713126,The cooling pad pump has gone bad in room B3.,LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+92087,ED AHU 002. SF 003. Rm 615 South mech room SF has a very bad vibration noise when running and door is open. I can not find where noise is coming from. Might be a bearing.,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,Fan 
+FM-581086,The soft serve machine is not freezing ice cream. Need to have someone come out and look at it and ask for Kathy. (General Comments),LOW,workorder,9,9,4-ROUTINE,HVAC,Unplanned Maintenance
+86966,"From Inspection 2041 Walls - Minor Wear - Patch and paint blue wall from table height to floor Major hole in the corner - Ph 345. Ph 343, CARP added - install corner guards",LOW,workorder,7,7,P3 - Routine Type I (21 days),Interior Finishes,Concrete Interior Wall Finish
+FM-512892,"Check condensate pump in KCR, it appears to be running constantly.",LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+129821,"Andy Aroonwilas add access to current fob 193303129 ED 409.4, 436.14, 437, 489 RIC 437",LOW,workorder,7,7,P3 - Routine Type I (21 days),Electrical,Keypad
+FM-726105,"ANSC A231 two plumbing flow issues, Brent spoke with Gabe.",LOW,workorder,9,9,4-ROUTINE,Plumbing,Unplanned Maintenance
+130335,van 10 leaking coolant from rear heater?,LOW,workorder,7,7,P3 - Routine Type I (21 days),Equipment,General Vehicular Equipment
+FM-695095,"In room D178F, temperature control breaker box needs to be turned back on, See Brent",LOW,workorder,9,9,4-ROUTINE,HVAC,Unplanned Maintenance
+115079,Pressure gauge was bottomed out and not working properly. Need service mechanic to fix or replace. Picture added to WO.,LOW,workorder,7,7,P4 - Routine Type II (60 days),HVAC,"Circulation Pump, Chiller & Condenser Water"
+FM-550499,AHG4 D4 current pad trough. Jeff Dowling is aware of this. check slope on trough,LOW,workorder,9,9,4-ROUTINE,HVAC,Unplanned Maintenance
+83811,Remove ceiling tiles for access to VAV and heating valve above ceiling. Location is identified by label on ceiling grid. Please advise when complete. ( Asbestos abatement crew),LOW,workorder,7,7,P3 - Routine Type I (21 days),Interior Finishes,Vinyl Tile Dropped Ceiling
+FM-603385,"LML room 004 for Refrigeration Rack ""C"". #2 compressor won't run.",LOW,workorder,9,9,4-ROUTINE,HVAC,Unplanned Maintenance
+87957,Sump pump float needs replacement. The crawlspace surrounding sump hole is flooded as pump does not run with bad float switch.,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Sump Pump
+FM-735082,Condensate pump running non stop,LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+123974,need 240 power to operate welder for new pump installation -- bert knows,LOW,workorder,7,7,P3 - Routine Type I (21 days),Electrical,"Wiring Device, Switch"
+FM-690105,GAUN replace main lobby chandelier winch motor and control panel.,LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+107969,Fire pump controller panel reads about 7-8 psi lower than normal. Please check.,LOW,workorder,7,7,P3 - Routine Type I (21 days),Fire Protection,Fire Suppression System Water Pump
+FM-684698,14PG investigate surge protectors on panels.,LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+120684,The front office temperature is too cold.,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,Thermostat
+FM-722141,Recirculating pump not working.,LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+118155,sump pump 038 has air leak in suction line,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Sump Pump
+FM-535461,"I have a facet in MOLR room 310D that is not working, it’s a sensor facet so I’m assuming the battery is likely dead in the sensor.",LOW,workorder,9,9,4-ROUTINE,Plumbing,Unplanned Maintenance
+90193,EF 35 very noisy. High pitched sound. Motor bearings appear to be ok. To be confirmed ELEC added,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,Fan 
+FM-660549,"Check the temper cabinet in the Dairy Store outside Kathy's office, the temperature will go way up, then slowly go back down. Contact Kathy with questions.",LOW,workorder,9,9,4-ROUTINE,HVAC,Unplanned Maintenance
+113316,The float on the condensate tank came off pulled access off the side of the tank and fished the float out of the pump pipe and reinstalled.,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,Pipe & Fittings
+FM-604955,"Glass Teaching Greenhouse Middle Section East Side. There is a possible steam pipe leak underneath the heating unit in this room, Dennis Adkins has been shown the location. (General Comments)",LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+112995,Water fountain on main floor kisik red light on for filter change,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Drinking Fountain
+FM-664804,Custodian lost a key down the elevator shaft at UHC. Please leave the keys in UHC room 39. Eletech and Justus notified.,LOW,workorder,9,9,4-ROUTINE,Conveying,Unplanned Maintenance
+85959,In basement Mech room 008 steam pressure reducing station has leak at flange gasket. Couldn’t find Asset on this station.,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,"Steam Boiler, Gas Fired"
+FM-518135,There was have no hot water in the kitchen this morning and the water pressure is very low.,LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+124040,control valve leaking above tub-- clean up insulation and try to found out where strange smells coming from in room 719 and 819 PAINTERS:,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,"Flow Control Valve, Motorized"
+FM-655106,FMS room 110 the white noise machine stops and starts intermittently.,LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+106093,Could I please have the exhaust in this space increased to help with the high heat issues? Thank you.,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,Exhaust Fan
+FM-575288,"In PLSH lab 436 the gas flow to the laminar flow hood is very weak, flame keeps going out.",LOW,workorder,9,9,4-ROUTINE,Plumbing,Unplanned Maintenance
+61838,"From Inspection 2147 Walls - Minor Wear - Patch and paint entrance, some wear marks from wall partitions Repair corner at entrance and paint wall - Ph 833.",LOW,workorder,7,7,P3 - Routine Type I (21 days),Interior Finishes,Concrete Interior Wall Finish
+FM-628663,Having a voltage issue in SEC 29 cabinet #N28.,LOW,workorder,9,9,4-ROUTINE,Electrical,Unplanned Maintenance
+112966,call out for water on floor and sump pump s not working for pool s -- shane .b. called out 7;00 am Thursday am,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Sump Pump
+116233,Scheduled Maintenance Motor making nose sounds like bearing.,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Water Softener
+129033,re pipe diffusers with galv. 5'' pipe to quiet down air flow,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Pipe & Fittings
+118133,STEAM LEAK ON Water Heater Steam Trap,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,"Steam Boiler, Gas Fired"
+85399,Please change rubber coupling shaft,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,"Circulation Pump, Chiller & Condenser Water"
+101936,Tension crank on basketball shooting machine is stripped and does not function anymore. Wondering if someone can look at it and see if it can be replaced.,LOW,workorder,7,7,P3 - Routine Type I (21 days),Equipment,General Other Equipment
+102019,Air leak by AHU 1 SF 2. copper line leaking at elbow,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Pipe & Fittings
+119089,From Inspection 7100 Wet Alarm Valve Inspection Report - Needs Attention - need to adjust pressure on low water pressure sensor,LOW,workorder,7,7,P3 - Routine Type I (21 days),Fire Protection,Pipe & Fittings
+103437,"Replace the o ring or repair the leak on the bypass filter canister,I have it isolated.",LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Unplanned Maintenance
+90281,This bathroom stall door will not stay closed. The lock and the latch don't seem to quite line up. CARPENTERS added to shim door,LOW,workorder,7,7,P4 - Routine Type II (60 days),Interior Construction,Door Hardware
+93037,Oil Change and Lubrication Services for Truck 29 are up please make appointment .Thanks,LOW,workorder,7,7,P3 - Routine Type I (21 days),Equipment,General Vehicular Equipment
+82586,Check low pressure on North pre action fire system.,LOW,workorder,7,7,P3 - Routine Type I (21 days),Fire Protection,Fire Sprinkler System
+81141,"From Inspection 1956 Base - Minor Wear - Cracking and stained Photos 108, 278, 279",LOW,workorder,7,7,P3 - Routine Type I (21 days),Furnishings,General Fixed Furnishings
+105095,Repair gas leak 35lb line came to building swing joint 90.out side between ED & CKHS,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,"Meter, Natural Gas"
+93810,Repair leak on substation door. During last weeks rain there was water on the floor on the inside of the substation floor in front of the door,LOW,workorder,7,7,P4 - Routine Type II (60 days),Interior Construction,Door Hardware
+125289,The broken latch on stall door,LOW,workorder,7,7,P3 - Routine Type I (21 days),Furnishings,General Fixed Furnishings
+56,RC Air Handler 3- replace static pressure transmitters with 0-5'',LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,"Air Handler, Exhaust/Multizone/Single Zone"
+79601,ceiling leak - painters,LOW,workorder,7,7,P3 - Routine Type I (21 days),Interior Finishes,Plaster Ceiling
+100786,Domestic Booster Pump 1A noisy,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,"Circulation Pump, Chiller & Condenser Water"
+97822,Scheduled Maintenance ED HWHP 003 coupler making noise ELECTRICAL: bearing hot and noisy,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,"Circulation Pump, Chiller & Condenser Water"
+80426,Test high voltage hot sticks and ground clusters,LOW,workorder,7,7,P6 - Deferred,Electrical,Unplanned Maintenance
+90304,Sump pump 022 float isn't working properly need electrical to look at float switch,LOW,workorder,7,7,P3 - Routine Type I (21 days),Plumbing,Sump Pump
+117032,Can I please order a keycard for CK 160.2 for Russell Kohrs. His current one has expired. Thanks.,LOW,workorder,7,7,P3 - Routine Type I (21 days),Electrical,Keypad
+83225,Coke would like to install a new coke machine on the counter but the new one will hit the suspended ceiling. Please see if we can modify so the new coke machine can fit. PNTRS added,LOW,workorder,7,7,P3 - Routine Type I (21 days),Interior Finishes,Vinyl Tile Dropped Ceiling
+102828,Thermostat. Not sure it is working. Office temperature is hot.,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,Thermostat
+90039,Flange is leaking on Pump 4's line.,LOW,workorder,7,7,P3 - Routine Type I (21 days),HVAC,"Circulation Pump, Hot Water"
+122372,From Inspection 7344 Oil Level - Needs Attention - Oil change required Check all the brakes. Loud squealing noise in rear wheel. Fix check engine error,LOW,workorder,7,7,P3 - Routine Type I (21 days),Equipment,General Vehicular Equipment
+BRN_LAB16016844,PLUMBING FAUCET MALFUNCTION,MEDIUM,workorder,2,2,2-URGENT,Plumbing,Sink
+UAF20-0010645,STANDBY: STEVENS HALL: GLYCOL PRESSURE WAS VERY LOW. NO COMPLETION NEEDED.,MEDIUM,workorder,3,3,2-URGENT,HVAC,Chilled Water Cooling System
+95036,The ice machine in the back storage Main Kitchen Riddell Centre is leaking,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Equipment,Icemaker
+FM-643919,Check the buzzing noise coming in from the vents in Andrews 33. It should be free on Wednesday morning before 9:00. (General Comments),MEDIUM,workorder,9,9,2-URGENT,HVAC,General Systems Testing & Balancing
+KCK_LAB17026982,PLUMBING PUMP MALFUNCTION,MEDIUM,workorder,2,2,2-URGENT,Plumbing,"Circulator Pump, Hot Water/Cold Water"
+UAF13-0016370,STANDBY: WOOD CENTER: AHU-1 FAN FAILURE ON LOW TEMP **NO COMPLETION NEEDED.,MEDIUM,workorder,3,3,2-URGENT,HVAC,"Air Handler, Exhaust/Multizone/Single Zone"
+126396,"Please reissue a new VING card for the following: ED229/ED393.. expiry December 31, 2020 TO a Grad student: Yueming Liu, ID# 200318297 **She has lost her current card, can you please cancel it?**",MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Electrical,Keypad
+FM-594231,"The cooling fans in A1 are stuck on at PPG, Room A1. Priority 2. This room can not control the temperature if the cooling fans are stuck on.",MEDIUM,workorder,9,9,2-URGENT,HVAC,Fan 
+MEAD17071154,HVAC: STATIC PRESSURE OUT OF RANGE,MEDIUM,workorder,2,2,2-URGENT,HVAC,HVAC Control Panel
+UAF11-0009182,SB: SOIL TEST AREA TEMP OUT OF RANGE,MEDIUM,workorder,3,3,2-URGENT,HVAC,Thermostat
+101571,motor smells like something is burning. checked with thermo temp gun and when motor is running its at 135 or 57 C MECHANICAL added,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),HVAC,Fan 
+FM-587569,There is a very loud noise coming from the 5th floor mechanical/fan room at NH east. (General comments),MEDIUM,workorder,9,9,2-URGENT,HVAC,General Systems Testing & Balancing
+KRK_LAB17068697,HVAC: FUME HOOD AIR FLOW ISSUE,MEDIUM,workorder,2,2,2-URGENT,Equipment,Laboratory Exhaust Hood
+UAF14-0031603,STANDBY: CTC: HEAT EXCHANGER 1 GLYCOL SUPPLY TEMP IN ALARM. **NO COMPLETION NEEDED**,MEDIUM,workorder,3,3,2-URGENT,HVAC,Heat Exchanger
+114736,"Please reissue a VING card for the following: Vaibhav Puri, ID# 200397263 Access to ED229/ED355/ED392/ED393... expiry April 30, 2019 **Please cancel his current card**",MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Electrical,Keypad
+FM-511071,Temperature in cold room B113C ANSC has been going up and is now too high according to jEMS. (General comments),MEDIUM,workorder,9,9,2-URGENT,HVAC,HVAC Control Panel
+CAHILL17049825,BMS: FUME HOOD AIR FLOW ISSUE,MEDIUM,workorder,2,2,2-URGENT,Equipment,Laboratory Exhaust Hood
+UAF13-0001912,BUNNELL PRINTING SERVICES RMS 137-142: RESPOND TO CEILING LEAK. LEAK IS IN THE MIDDLE OF THE ROOM NEAR THE WINDOWS. NOTIFIED STEVE BOTTASSO.,MEDIUM,workorder,3,3,2-URGENT,Plumbing,Pipe & Fittings
+122298,Found LY 2 PB 00C surge suppressor in alarm. Will fix now. Jim C,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Electrical,Distribution Panel Board
+FM-689506,BEL pcw pump pressure differential alarm.,MEDIUM,workorder,9,9,2-URGENT,HVAC,HVAC Control Panel
+K_SPALD18081800,PLUMBING FLUSH VALVE ISSUE,MEDIUM,workorder,2,2,2-URGENT,Plumbing,Toilet & Wash Basin
+UAF20-0003980,STANDBY: STUART 5: LOUD HOWLING NOISE IN HALLWAY. COMPLETION NEEDED TO MAKE SURE SOUND IS GONE.,MEDIUM,workorder,3,3,2-URGENT,HVAC,Unplanned Maintenance
+99143,Pump failed to run (mechanical) ELECTRICAL added to check motor,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Electrical,Motor Starter
+FM-569329,"JH. RM 174C. 65 degrees and the thermostat can not be adjusted. Not urgent, Larry Burgess turned the temperature up.",MEDIUM,workorder,9,9,2-URGENT,HVAC,Thermostat
+363HILL17073000,ROOF: RAIN LEAK,MEDIUM,workorder,2,2,2-URGENT,Roofing,Concrete Roof
+UAF19-0031820,STANDBY: AHRB: 147B TEMP OUT OF RANGE. COMPLETION NEEDED TO ADJUST ALARM TIMING LONGER TO PREVENT NUISANCE ALARMS.,MEDIUM,workorder,3,3,2-URGENT,HVAC,General Other HVAC Systems & Equipment
+102423,there seems to have been leak from the heating system in ED 444.2,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),HVAC,Pipe & Fittings
+FM-573487,The button to raise the temperature on the thermostat is not working in HARH 125. The room stays rather cool.,MEDIUM,workorder,9,9,2-URGENT,HVAC,Thermostat
+SLOAN16015560,PLUMBING: LEAK,MEDIUM,workorder,2,2,2-URGENT,Plumbing,Pipe & Fittings
+UAF14-0017538,"STANDBY: UPARK BLDG: MULTIPLE EQUIPMENT FAILURES, LIFT STATION CONTROL POWER, HEAT PUMPS ARTIFICIAL FAIL. **NO COMPLETION NEEDED**",MEDIUM,workorder,3,3,2-URGENT,Electrical,Power Supply
+111836,Hot Chocolate machine at Tim Hortons Lab Café in not working.,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Equipment,Appliances
+FM-702673,"The 3rd stall in the women's restroom has had water leaking under the bowl. Custodial was contacted to clean, but it was determined that there may be a crack in the bowl. (General Comments)",MEDIUM,workorder,9,9,2-URGENT,Plumbing,Pipe & Fittings
+UAF19-0010734,STANDBY: HESS VILLAGE 755D: TOILET WAS CONTINUOUSLY RUNNING. COMPLETION NEEDED TO CHECK FLUSH VALVE OPERATION.,MEDIUM,workorder,3,3,2-URGENT,Plumbing,Flush Tank Water Closet
+101176,The lock on the handicap stall door fell apart. The pieces are on the counter of the washroom.,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Furnishings,General Fixed Furnishings
+FM-724189,"ANDR third floor women's restroom, toiled in the middle stall leaks.",MEDIUM,workorder,9,9,2-URGENT,Plumbing,Toilet & Wash Basin
+UAF12-0020017,SB: KOTZEBUE: FIELD PANEL FAILURE,MEDIUM,workorder,3,3,2-URGENT,HVAC,HVAC Control Panel
+119645,leak in air handler cooling coils on 3rd floor,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),HVAC,"Air Handler, Exhaust/Multizone/Single Zone"
+FM-732510,Study area W213D is quite cold. The temperature is not known. (General comments),MEDIUM,workorder,9,9,2-URGENT,HVAC,HVAC Control Panel
+UAF12-0020134,SB: DILLINGHAM: SF3 TEMP IN ALARM,MEDIUM,workorder,3,3,2-URGENT,HVAC,Supply Fan
+111633,Leak on valve body of control valve servicing VAV3-19. 1/2” connections and located in ceiling space in Galway directly outside room 350. Called out Saturday around 6:00pm,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),HVAC,Flow Control Valve
+FM-600584,"At Temple in the basement men's restroom #22, the 1st stall stool has the flush valve stuck and will not shut off. Please check ASAP. (General comments)",MEDIUM,workorder,9,9,2-URGENT,Plumbing,Toilet & Wash Basin
+UAF15-0018515,STANDBY: FA ARTS: HX2 GLYCOL PRESSURE IN ALARM WITH VALVE 7PSI. **NO COMPLETION NEEDED**,MEDIUM,workorder,3,3,2-URGENT,HVAC,Pressure Reducer Valve
+117116,Low pressure alarm. Make a WO for controls and one for pm,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),HVAC,Direct Digital Controls
+FM-573119,"Ceiling leak in ANSC room B203, also some water in a light fixture from the leak.",MEDIUM,workorder,9,9,2-URGENT,Plumbing,Pipe & Fittings
+UAF09-0025804,SB: SF14 TEMP OUT OF RANGE,MEDIUM,workorder,3,3,2-URGENT,HVAC,Supply Fan
+101719,Shut off valve for hot water to kitchen tap needs to be looked at. Not leaking now but signs it has been in past.,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Plumbing,Sink
+FM-607874,There is not heat at FME. (General comments),MEDIUM,workorder,9,9,2-URGENT,HVAC,HVAC Control Panel
+UAF11-0015513,"CI: PUMPS NOT WORKING, LOW HEAT",MEDIUM,workorder,3,3,2-URGENT,HVAC,"Circulation Pump, Hot Water"
+86719,On the womenâ€™s toilet handicap when it is flushed the water came out from the pipe of the pump,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Plumbing,Toilet & Wash Basin
+FM-517308,"SHEL room 109 is cold, the temperature shows 65 degrees. (General Comments)",MEDIUM,workorder,9,9,2-URGENT,HVAC,HVAC Control Panel
+UAF15-0031816,STANDBY: BROOKS: HEAT PUMP FAILED. **COMPLETION NEEDED TO RESET AND REPAIR HEAT PUMPS IF NEEDED.,MEDIUM,workorder,3,3,2-URGENT,HVAC,"Circulation Pump, Hot Water"
+105404,"200399695 , Walia, Gaurav. This is a request to add after hours access for elevator and washroom to his current fob, Thank you!",MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Electrical,Keypad
+FM-626116,At BENH server room 303 is getting too warm. The temperature is not known by the reporter. (General comments),MEDIUM,workorder,9,9,2-URGENT,HVAC,HVAC Control Panel
+UAF13-0009594,STANDBY: SRC: RESTART AHU-1 AFTER SHUTDOWN FOR FUMES. NO COMPLETION NEEDED.,MEDIUM,workorder,3,3,2-URGENT,HVAC,"Air Handler, Exhaust/Multizone/Single Zone"
+83961,"Motor for south basketball hoop on east court made loud noise, thinking motor just blew. Will need to get replaced ASAP as hoop is not functional.",MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Equipment,General Other Equipment
+FM-543957,The toilet in the women’s restroom handicap stall in Plant Science 2nd floor is constantly flushing.,MEDIUM,workorder,9,9,2-URGENT,Plumbing,Toilet & Wash Basin
+UAF12-F028405,1ST FLR MENS: INVEST/REPR LEAK,MEDIUM,workorder,3,3,2-URGENT,Plumbing,Pipe & Fittings
+129816,The toilet in the last stall is flushing too fast and overflowing the bowl,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Plumbing,Toilet & Wash Basin
+FM-696482,LLS 319A (NE corner of LLS) sensor beeping in the room. (General Comments),MEDIUM,workorder,9,9,2-URGENT,Electrical,Occupancy Sensors
+UAF18-0022617,STANDBY: BROOKS: 305.HX1.GP IN ALARM LOW. COMPLETION NEEDED TO CHECK EXP TANK & SENSOR FOR SETTINGS AND ACCURACY.,MEDIUM,workorder,3,3,2-URGENT,HVAC,Heat Exchanger
+103246,KI 272.1 - light seems to flicker periodically. Sensor is not functioning properly.,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Electrical,Fluorescent Lighting Fixture
+FM-680039,Small leak in thread part of gas hose in Room 212. (General Comments),MEDIUM,workorder,9,9,2-URGENT,Plumbing,Pipe & Fittings
+UAF15-0016431,"STANDBY: 714C CHANDALAR: TOO COLD, HEAT PROBLEM. COMPLETION TO CHECK HEAT (FOLLOW UP).",MEDIUM,workorder,3,3,2-URGENT,HVAC,Thermostat
+85778,There is a new stained ceiling tile near the door marked LY 107.18.2 in LY 107.18.4. Can the reason for the leak be looked into and the ceiling tile replaced. Thank you.,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Interior Finishes,Vinyl Tile Dropped Ceiling
+FM-688538,Arch Hall Room 130 has been very cold lately. Students have been asking if it is possible to make some temperature adjustments to this room. Thanks (General comments),MEDIUM,workorder,9,9,2-URGENT,HVAC,HVAC Control Panel
+UAF08-0027592,SB: TEMP LOW HX-1,MEDIUM,workorder,3,3,2-URGENT,HVAC,Heat Exchanger
+128312,May you turn the heat on in CB 210 Floyd would like to tune the piano there this afternoon and we need the room at occupied temperature before that happens.,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),HVAC,Thermostat
+FM-657608,KCR system trouble and low pressure sprinkler system. (General comments),MEDIUM,workorder,9,9,2-URGENT,Electrical,Security Control Panel
+UAF13-0019835,STANDBY: AFES PALMER FARM: FAILURE ON FIELD PANEL 99 ON TRUNK UAF_AFES,MEDIUM,workorder,3,3,2-URGENT,HVAC,HVAC Control Panel
+98670,Pump failed to run (mechanical),MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),HVAC,"Circulation Pump, Hot Water"
+FM-660751,I noticed we have a large leak coming down the inside of one of the walls on the Northside entrance of the building. (Photo attached) (General comments),MEDIUM,workorder,9,9,2-URGENT,Plumbing,Pipe & Fittings
+UAF07-0000446,CONF RM: REPAIR ROOF LEAK,MEDIUM,workorder,3,3,2-URGENT,Roofing,Concrete Roof
+67445,Investigate ground fault on panel,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Fire Protection,Fire Alarm Control Panel
+FM-551573,Emergency pump on top of the grade in the ANSC pit is not working. (General comments),MEDIUM,workorder,9,9,2-URGENT,Plumbing,"Circulator Pump, Hot Water/Cold Water"
+UAF14-0013777,STANDBY: IRVING I: CHAMBER 2 HIGH TEMPERATURE ALARM. **NO COMPLETION NEEDED**,MEDIUM,workorder,3,3,2-URGENT,HVAC,HVAC Control Panel
+79129,Eye wash station temperature is too hot.,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Plumbing,Emergency Eye Wash
+FM-512900,In CBA 300A the heat does not seem to be working (General comments),MEDIUM,workorder,9,9,2-URGENT,HVAC,HVAC Control Panel
+UAF13-0027851,STANDBY: AURORA BLDG: FAILURE FURNACE ALARM.,MEDIUM,workorder,3,3,2-URGENT,HVAC,"Furnace, Gas/Oil/Electric"
+97611,Mechanical and UTM crew checking all chilled water related equipment and coils for loss of chilled water. Potential leak from some source.,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),HVAC,Pipe & Fittings
+FM-622541,Housing is very loose for the feminine hygiene disposal unit in the central stall in HAH fourth floor women's restroom. (General comments),MEDIUM,workorder,9,9,2-URGENT,Furnishings,General Fixed Furnishings
+UAF20-0002703,STANDBY: FA/ MUSIC: 312. HX1. PCA PUMP CRIT ALARM. COMPLETION NEEDED TO CHECK PUMP ALARM.,MEDIUM,workorder,3,3,2-URGENT,HVAC,Heat Exchanger
+115397,broken lock in stall door,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Interior Construction,Door Hardware
+FM-714380,Loss of Steam Pressure to building (General Comments),MEDIUM,workorder,9,9,2-URGENT,HVAC,Pipe & Fittings
+UAF19-0012250,KUSKOKWIM CAMPUS: YUPIK LANGUAGE CENTER: MECH RM: DISTRICT HEAT LINE GLYCOL LEAK SEE EXTRA DESCRIPTION,MEDIUM,workorder,3,3,2-URGENT,HVAC,Pipe & Fittings
+83659,Seal is leaking when running. Also there a small leak coming from check valve lever. ELECS added to replace motor bearings,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),HVAC,"Circulation Pump, Chiller & Condenser Water"
+FM-614044,(After hours) OTHM.WATER_RO.FILTER.ALARM Low pressure and filter needs to be changed ASAP. Alarm came in at 6:40am. Zones will need to take care ASAP.,MEDIUM,workorder,9,9,2-URGENT,Plumbing,Reverse Osmosis/Deionized Water System
+UAF14-0026569,STANDBY: FA MUSIC: LEAK AT STAIRS FROM SCENE SHOP TO DAVIS HALL. **COMPLETION NEEDED TO DETERMINE LEAK AND CORRECT**,MEDIUM,workorder,3,3,2-URGENT,Stairs,General Stair Finishes
+118805,"the lock of handicap stall has a mechanism problem, the staff complain it is hard to close and open, thanks",MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Interior Construction,Door Hardware
+FM-554191,"At ANSC there is a water leak in the west entrance door. Also, there is water on the floor by room D108. (General comments)",MEDIUM,workorder,9,9,2-URGENT,Exterior Enclosure,"Wood, Exterior/Painted/Glazed"
+UAF15-0028272,STANDBY: GRUENING: GLYCOL PRESSURE ALARM. **NO COMPLETION NEEDED**,MEDIUM,workorder,3,3,2-URGENT,HVAC,HVAC Control Panel
+88634,KI 827.6 - light sensor is not working.,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Electrical,Fluorescent Lighting Fixture
+FM-717468,NH E421F is cold. The temp is hovering around 60 degrees. (General comments),MEDIUM,workorder,9,9,2-URGENT,HVAC,HVAC Control Panel
+UAF12-0018161,SB: HX-1 TEMP OUT OF RANGE,MEDIUM,workorder,3,3,2-URGENT,HVAC,Heat Exchanger
+83519,Chilled water pump 2 is in alarm. - mechs,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),HVAC,"Circulation Pump, Chiller & Condenser Water"
+FM-539095,"Kiln on the west side of Richards Hall is leaking gas, not a dangerous leak but needs attention ASAP.",MEDIUM,workorder,9,9,2-URGENT,Special Construction,Pipe & Fittings
+UAF18-0020192,STANDBY: LATHROP 107: LEAK COMING FROM CEILING. TILES FALLING. COMPLETION NEEDED TO REPAIR LEAKY PIPE.,MEDIUM,workorder,3,3,2-URGENT,Interior Finishes,Vinyl Tile Dropped Ceiling
+130250,Door lock/catch not working in the last stall,MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Furnishings,General Fixed Furnishings
+FM-639442,WICK HHWG_RHT system is in critical low return pressure alarm (General comments),MEDIUM,workorder,9,9,2-URGENT,HVAC,HVAC Control Panel
+UAF10-0025385,SB: LOW GLYCOL PRESSURE HX #1 SYSTEM,MEDIUM,workorder,3,3,2-URGENT,HVAC,Heat Exchanger
+83340,"Subway Restaurant in the Lab Building, a hose from the ice machine was knocked out of the collar leading to the floor drain leading to water pooling on the floor. Possibly the hose is to short",MEDIUM,workorder,7,7,P2 - Urgent/Expedited (3 days),Equipment,Icemaker
