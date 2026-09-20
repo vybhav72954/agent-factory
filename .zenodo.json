@@ -1,0 +1,26 @@
+{
+  "title": "ForgeMind: an agentic predictive-maintenance pipeline, with the evaluation artifacts for \"When Does a Large Language Model Earn Its Place in an Agentic Maintenance Pipeline?\"",
+  "upload_type": "software",
+  "license": "MIT",
+  "creators": [
+    { "name": "Chaturvedi, Vybhav", "affiliation": "Indian Institute of Management Calcutta" },
+    { "name": "Taneja, Pranav" },
+    { "name": "Yadav, Sneha" },
+    { "name": "Patil, Rohit Ranjit" },
+    { "name": "Sharan, Siddharth" },
+    { "name": "Sinha, Sourav" }
+  ],
+  "description": "<p>ForgeMind is an open agentic pipeline for scenario testing on a digital twin of a five-machine electronics assembly line. An operator's free-text fault report is converted into a structured severity interface (sensor, severity band, magnitude), injected into a 50-step, 18-channel sensor window, passed to a convolutional-recurrent remaining-useful-life model, and turned into a machine status and a dispatch instruction.</p><p>This deposit archives the pipeline together with the artifacts behind the accompanying paper: the prompt banks, the recorded outputs of every language-model and classifier arm, the replayed predictions, the result tables, the pre-registered analysis plan, and the verification script that recomputes every number reported in the paper from the raw files.</p><p>Third-party data are not redistributed. The PRONOSTIA bearing recordings and the FMUCD work-order corpus must be obtained from their original sources; only the sampled record identifiers and the outputs produced from them are included here.</p>",
+  "keywords": [
+    "agentic artificial intelligence",
+    "predictive maintenance",
+    "large language models",
+    "prognostics",
+    "remaining useful life",
+    "maintenance work orders",
+    "physics-informed simulation",
+    "text classification"
+  ],
+  "access_right": "open",
+  "language": "eng"
+}

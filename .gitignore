@@ -5,8 +5,6 @@ test_inference_local.py
 test_*.py
 probe_ramp_vs_flat.py
 probe_cliff.py
-REPRODUCE.md
-research/results/*
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -324,14 +322,41 @@ publication_output
 # ─── Research folder — archived / internal / submission artifacts ─────────────
 research/Old_results/
 research/RESS/
+research/MSSP/
 research/paper_assets/
 research/paper_draft.md
 research/related_work.md
 research/BUG_REPORT_*.md
 research/extensions_roadmap.md
 
+# ─── Manuscripts and journal strategy stay local ──────────────────────────────
+# Everything under research/AEI/ is private working material (drafts, target-journal
+# notes, the built submission package). Two files are deliberate exceptions: the
+# analysis plan and the verification report are cited by the paper as released
+# alongside the code, so they have to be public.
+research/AEI/*
+!research/AEI/analysis_plan_additions.md
+!research/AEI/verification_report.md
+
+# Builds the submission .docx set; holds the cover letter and personal contact details
+research/build_aei_docx.py
+
+# Abandoned human-rater material. The study deliberately uses no raters, with
+# design severities as ground truth, so shipping rater sheets would misdescribe it.
+research/paraphrase/labeling/
+
+# Pre-change result snapshots, kept locally for provenance only
+research/results/backup_*/
+
+# The recorded model outputs and result tables are the evidence base the paper points to,
+# so they override the blanket *.csv rule near the top of this file. Files inside the
+# excluded backup directories above stay excluded: a negation cannot re-include them.
+!research/results/*.csv
+!research/results/**/*.csv
+
 # ─── Research — large data files (reproduced via generate_training_data.py) ───
 research/simulator/data/
+research/pronostia/data/
 
 # ─── Model weight backups ─────────────────────────────────────────────────────
 dl_engine/weights/*.bak
@@ -341,3 +366,12 @@ dl_engine/weights/*.bak
 
 # ─── Word / Office temp lock files ────────────────────────────────────────────
 ~$*
+
+# Trained-baseline caches (embeddings, fitted R1 models); rebuilt by python -m research.trained_baselines
+research/trained_baselines_artifacts/
+
+# External datasets (downloaded, not redistributed)
+research/external/
+
+# Python caches
+__pycache__/
